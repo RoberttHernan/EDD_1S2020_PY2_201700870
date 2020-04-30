@@ -1,12 +1,14 @@
 package Estructuras;
 
+import Otras_Clases.Libro;
+
 /**
  *
  * @author Robert Hernandez Clase que representa el nodo de un arbol -B
  */
 public class BTreeNode {
 
-    private int[] keys; // array de claves
+    private Libro[] keys; // array de claves
     private int t; // Grado minimo ( define el numero de llaves )
     private BTreeNode[] C; // Array de hijos
     private int n; // numero actual de llaves
@@ -15,7 +17,7 @@ public class BTreeNode {
     public BTreeNode(int t, boolean leaf) {
         this.t = t;
         this.leaf = leaf;
-        keys = new int[2*t-1];
+        keys = new Libro[2*t-1];
         C = new BTreeNode[2*t];
         n = 0;
     }
@@ -34,11 +36,11 @@ public class BTreeNode {
 
     }
 
-    public BTreeNode search(int k) {
+    public BTreeNode search( Libro k) {
         int i = 0;
-        while (i < n && k > keys[i]) {
+        while (i < n && k.getIsbn() > keys[i].getIsbn()) {
             i++;
-            if (keys[i] == k) {
+            if (keys[i].getIsbn() == k.getIsbn()) {
                 return this;
             }
             if (leaf == true) {
@@ -90,14 +92,14 @@ public class BTreeNode {
 
     }
 
-    public void insertNonFull(int k) {
+    public void insertNonFull(Libro k) {
         int i = n - 1;
         // si el nodo es hoja
         if (leaf == true) {
             //El siguiente loop hara dos cosas
             //a)encontrara el lugar de la nueva llave a insertar
             //b) movera todos las llaves mayores un espacion hacia adelante
-            while (i >= 0 && keys[i] > k) {
+            while (i >= 0 && keys[i].getIsbn() > k.getIsbn()) {
                 keys[i + 1] = keys[i];
                 i--;
             }
@@ -108,7 +110,7 @@ public class BTreeNode {
 
         } else { // si el nodo no es hoja
             // Encuentra el hijo que contendra la nueva llave
-            while (i >= 0 && keys[i] > k) {
+            while (i >= 0 && keys[i].getIsbn() > k.getIsbn()) {
                 i--;
             }
             if (C[i + 1].getN() == 2 * t - 1) {
@@ -118,7 +120,7 @@ public class BTreeNode {
 
             // Luego de splitear, la llave media de C[i] va arriba y 
                 // C[i] is splitteada en dos. ve cual de las dos va a tener la nueva llave
-                if (keys[i + 1] < k) {
+                if (keys[i + 1].getIsbn() < k.getIsbn()) {
                     i++;
                 }
             }
@@ -130,11 +132,11 @@ public class BTreeNode {
      *
      */
 
-    public int[] getKeys() {
+    public Libro[] getKeys() {
         return keys;
     }
 
-    public void setKeys(int[] keys) {
+    public void setKeys(Libro[] keys) {
         this.keys = keys;
     }
 
@@ -183,7 +185,7 @@ public class BTreeNode {
         b.append( getDotName() );
         b.append("[label=\"<P0>");
         for( int i = 0; i < n; i++ ) {
-            b.append("|").append(keys[i]);
+            b.append("|").append(keys[i].getTitulo());
             b.append("|<P").append(i+1).append(">");                
         }
         

@@ -14,7 +14,10 @@ public class NodoAvl {
      * Variable que almacena el valor específico del nodo.
      */
     final Comparable valor;
-
+    /*
+    *El Nodo del arbol AVL almacenara un arbol B
+    */
+    private BTree arbolB ; 
     /**
      * Variable que apunta hacia el nodo derecho de este nodo.
      */
@@ -193,5 +196,14 @@ public class NodoAvl {
     public void setId(int id) {
         this.id = id;
     }
+
+    public BTree getArbolB() {
+        return arbolB;
+    }
+
+    public void setArbolB(BTree arbolB) {
+        this.arbolB = arbolB;
+    }
+    
     
 }

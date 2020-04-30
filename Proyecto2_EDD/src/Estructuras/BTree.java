@@ -1,5 +1,7 @@
 package Estructuras;
 
+import Otras_Clases.Libro;
+
 /**
  *
  * @author Robert Hernandez Clase que modela un arbol-B
@@ -20,14 +22,14 @@ public class BTree {
         }
     }
 
-    public BTreeNode search(int k) {
+    public BTreeNode search(Libro k) {
         if (root == null) {
             return null;
         }
         return root.search(k);
     }
 
-    public void insert(int k) {
+    public void insert(Libro k) {
         if (root == null) {
             root = new BTreeNode(t, true);
             root.getKeys()[0] = k;
@@ -44,7 +46,7 @@ public class BTree {
                 // la nueva raiz tiene dos hijos ahora, decide cual de los dos hijos
                 // tiene que tener una nueva llave
                 int i = 0;
-                if (s.getKeys()[0] < k) {
+                if (s.getKeys()[0].getIsbn() < k.getIsbn()) {
                     i++;
                 }
                 s.getC()[i].insertNonFull(k);
