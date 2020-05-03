@@ -1,9 +1,9 @@
 digraph grafica{
 rankdir=TB;
 node [shape = record, style=filled, fillcolor=seashell2];
-nodo2 [ label ="<C0>|Henry|<C1>"];
-nodo3 [ label ="Danie"];
-nodo2:C0->nodo3
-nodo1 [ label ="Robert"];
-nodo2:C1->nodo1
+nodo3 [ label ="<C0>|Fantasia|<C1>"];
+nodo2 [ label ="Accion"];
+nodo3:C0->nodo2
+nodo1 [ label ="Terror"];
+nodo3:C1->nodo1
 }

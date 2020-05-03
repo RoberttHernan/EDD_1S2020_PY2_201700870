@@ -36,10 +36,9 @@ public class main {
         doDot("grafo1.txt", "grafo1.jpg");*/
         
         ArbolAvl avlTree = new ArbolAvl();
-        avlTree.insertar("Robert");
-        avlTree.insertar("Henry");
-        avlTree.insertar("Danie");
-        avlTree.insertar("Robert");
+        avlTree.insertar("Terror");
+        avlTree.insertar("Accion");
+        avlTree.insertar("Fantasia");
         avlTree.graficar("graficas//arbol.jpg");
         doDot("graficas//aux_grafico.dot", "graficas//arbol.jpg");
         avlTree.inorden();
