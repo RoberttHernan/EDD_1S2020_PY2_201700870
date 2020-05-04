@@ -2,7 +2,10 @@ package Main;
 
 import Estructuras.ArbolAvl;
 import Estructuras.BTree;
+import Estructuras.TablaHash;
+import Otras_Clases.Estudiante;
 import Otras_Clases.Libro;
+import Vistas.VentanaPrincipal;
 import java.io.FileWriter;
 
 /**
@@ -13,35 +16,22 @@ import java.io.FileWriter;
 public class main {
 
     public static void main(String[] args) {
-       /* Libro lib1 = new Libro(215, "Harry potter", 201700870);
-        Libro lib2 = new Libro(300, "The hunger games", 201708890);
-        Libro lib3 = new Libro(150, "Java para dummies", 201708890);
-
-        BTree arbol = new BTree((3));
-
-        arbol.insert(lib1);
-        arbol.insert(lib2);
-        arbol.insert(lib3);
-
-        try {
-
-            FileWriter f = new FileWriter("grafo1.txt");
-
-            f.write(arbol.toDot());
-
-            f.close();
-
-        } catch (Exception e) {
-        }
-        doDot("grafo1.txt", "grafo1.jpg");*/
+        /*Estudiante estudiante1 = new Estudiante(201700870, "Roberto", "Hernandez", "Sistemas", "1456");
+        Estudiante estudiante2 = new Estudiante(201700914, "Enrique", "Calvillo", "Civil", "14871");
+        Estudiante estudiante3 = new Estudiante(201704512, "Ericka", "Rivera", "Civil", "144781");
         
-        ArbolAvl avlTree = new ArbolAvl();
-        avlTree.insertar("Terror");
-        avlTree.insertar("Accion");
-        avlTree.insertar("Fantasia");
-        avlTree.graficar("graficas//arbol.jpg");
-        doDot("graficas//aux_grafico.dot", "graficas//arbol.jpg");
-        avlTree.inorden();
+        TablaHash tablaH = new TablaHash(45);
+        tablaH.insert(estudiante1);
+        tablaH.insert(estudiante2);
+        tablaH.insert(estudiante3);*/
+        VentanaPrincipal ventanaPrincpal = new VentanaPrincipal();
+        ventanaPrincpal.setVisible(true);
+        
+
+        
+        
+        
+        
 
     }
 

@@ -17,17 +17,32 @@ public class TablaHash {
     }
 
     public void insert(Estudiante estudiante) {
-        int casilla = funcionHash(estudiante.getCarnet());
-        if (casilla <= 45) {
-            if (elementos[casilla - 1] == null) {
-                elementos[casilla - 1] = new SLL();
-            }
+        if (buscar(estudiante.getCarnet()) != null) {
+            System.out.println("Carnet: " + estudiante.getCarnet() +" Ya registrado");
+        } else {
+            int casilla = funcionHash(estudiante.getCarnet());
+            if (casilla <= 45) {
+                if (elementos[casilla - 1] == null) {
+                    elementos[casilla - 1] = new SLL();
+                }
 
-            elementos[casilla - 1].insert(estudiante);
+                elementos[casilla - 1].insert(estudiante);
+            }
         }
     }
+
     static int funcionHash(int n) {
         return (n % 45);
+    }
+
+    public Estudiante buscar(int carnet) {
+        int casillas = funcionHash(carnet);
+        if (elementos[casillas - 1] == null) {
+            return null;
+        } else {
+            return elementos[casillas - 1].buscar(carnet);
+        }
+
     }
 
     public SLL[] getElementos() {

@@ -5,6 +5,20 @@
  */
 package Vistas;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+
 /**
  *
  * @author robea
@@ -14,6 +28,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     /**
      * Creates new form VentanaPrincipal
      */
+    static int opcion = 0;
     public VentanaPrincipal() {
         initComponents();
     }
@@ -31,12 +46,33 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jTPassIngreso = new javax.swing.JTextField();
         jTNombreIngreso = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vistas/Imagenes/LogoProyecto.PNG"))); // NOI18N
 
         jButton1.setText("Ingresar");
+
+        jMenu1.setText("Carga Masiva");
+
+        jMenuItem1.setText("Usuarios");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -45,7 +81,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(31, 31, 31)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 633, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1)
                     .addComponent(jTNombreIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -63,12 +99,85 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
-                .addContainerGap(186, Short.MAX_VALUE))
+                .addContainerGap(165, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        int seleccion = fileChooser.showDialog(jLabel1, null);
+        JsonParser parser = new JsonParser();
+        try {
+            FileReader fr = new FileReader(fileChooser.getSelectedFile());
+            JsonElement datos = parser.parse(fr);
+            CargaUsuarios(datos);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
+        
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+public static void CargaUsuarios(JsonElement elemento) {
+        
+        if (elemento.isJsonObject()) {
+            JsonObject obj = elemento.getAsJsonObject();
+            java.util.Set<java.util.Map.Entry<String, JsonElement>> entradas = obj.entrySet();
+            java.util.Iterator<java.util.Map.Entry<String, JsonElement>> iter = entradas.iterator();
+            while (iter.hasNext()) {
+                java.util.Map.Entry<String, JsonElement> entrada = iter.next();
+                
+                if (entrada.getKey().equals("Carnet")) {
+                    opcion = 1;
+                } else if (entrada.getKey().equals("Nombre")) {
+                    opcion = 2;
+                } else if (entrada.getKey().equals("Apellido")) {
+                    opcion = 3;
+                } else if (entrada.getKey().equals("Carrera")) {
+                    opcion = 4;
+                } else if (entrada.getKey().equals("Password")) {
+                    opcion = 5;
+                }
+                CargaUsuarios(entrada.getValue());
+            }
+
+        } else if (elemento.isJsonArray()) {
+            JsonArray array = elemento.getAsJsonArray();
+            System.out.println("Es array. Numero de elementos: " + array.size());
+            java.util.Iterator<JsonElement> iter = array.iterator();
+            while (iter.hasNext()) {
+                JsonElement entrada = iter.next();
+                CargaUsuarios(entrada);
+            }
+        } else if (elemento.isJsonPrimitive()) {
+            JsonPrimitive valor = elemento.getAsJsonPrimitive();
+            switch (opcion) {
+                case 1:
+                    System.out.println("Carnet:" + valor.getAsString());
+                    break;
+                case 2:
+                    System.out.println("Nombre:" + valor.getAsString());
+                    break;
+                case 3:
+                    System.out.println("Apellido:" + valor.getAsString());
+                    break;
+                case 4:
+                    System.out.println("Carrera:" + valor.getAsString());
+                    break;
+                    case 5:
+                    System.out.println("Password:" + valor.getAsString());
+                    break;
+
+            }
+        } else if (elemento.isJsonNull()) {
+            System.out.println("Es NULL");
+        } else {
+            System.out.println("Es otra cosa");
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -107,6 +216,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JTextField jTNombreIngreso;
     private javax.swing.JTextField jTPassIngreso;
     // End of variables declaration//GEN-END:variables
