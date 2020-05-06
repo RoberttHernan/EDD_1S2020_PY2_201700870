@@ -5,19 +5,22 @@
  */
 package Vistas;
 
+import Estructuras.TablaHash;
+import Otras_Clases.Estudiante;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -25,12 +28,20 @@ import javax.swing.JFileChooser;
  */
 public class VentanaPrincipal extends javax.swing.JFrame {
 
-    /**
-     * Creates new form VentanaPrincipal
-     */
+    private TablaHash tabla = new TablaHash(45);
+
     static int opcion = 0;
+
     public VentanaPrincipal() {
         initComponents();
+    }
+
+    public TablaHash getTabla() {
+        return tabla;
+    }
+
+    public void setTabla(TablaHash tabla) {
+        this.tabla = tabla;
     }
 
     /**
@@ -43,9 +54,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jTPassIngreso = new javax.swing.JTextField();
-        jTNombreIngreso = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -54,8 +62,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vistas/Imagenes/LogoProyecto.PNG"))); // NOI18N
-
-        jButton1.setText("Ingresar");
 
         jMenu1.setText("Carga Masiva");
 
@@ -69,7 +75,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edit");
+        jMenu2.setText("Configuracion");
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -78,28 +84,17 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 633, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jTNombreIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTPassIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addComponent(jTNombreIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jTPassIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
-                .addContainerGap(165, Short.MAX_VALUE))
+                .addGap(34, 34, 34)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(63, Short.MAX_VALUE))
         );
 
         pack();
@@ -107,77 +102,41 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Json", "json");
+        fileChooser.setFileFilter(filter);
+
         int seleccion = fileChooser.showDialog(jLabel1, null);
         JsonParser parser = new JsonParser();
         try {
             FileReader fr = new FileReader(fileChooser.getSelectedFile());
-            JsonElement datos = parser.parse(fr);
-            CargaUsuarios(datos);
+
+            JsonObject gsonObj = parser.parse(fr).getAsJsonObject();
+
+            JsonArray usuarios = gsonObj.get("Usuarios").getAsJsonArray();
+
+            for (JsonElement user : usuarios) {
+                JsonObject g = user.getAsJsonObject();
+
+                int carnet = g.get("Carnet").getAsInt();
+                String nombre = g.get("Nombre").getAsString();
+                String apellido = g.get("Apellido").getAsString();
+                String carrera = g.get("Carrera").getAsString();
+                String pass = getMd5(g.get("Password").getAsString());
+                System.out.println(pass);
+                Estudiante estudiante = new Estudiante(carnet, nombre, apellido, carrera, pass);
+                tabla.insert(estudiante);
+               
+
+            }
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
-        
+        tabla.print();
+
+
     }//GEN-LAST:event_jMenuItem1ActionPerformed
-public static void CargaUsuarios(JsonElement elemento) {
-        
-        if (elemento.isJsonObject()) {
-            JsonObject obj = elemento.getAsJsonObject();
-            java.util.Set<java.util.Map.Entry<String, JsonElement>> entradas = obj.entrySet();
-            java.util.Iterator<java.util.Map.Entry<String, JsonElement>> iter = entradas.iterator();
-            while (iter.hasNext()) {
-                java.util.Map.Entry<String, JsonElement> entrada = iter.next();
-                
-                if (entrada.getKey().equals("Carnet")) {
-                    opcion = 1;
-                } else if (entrada.getKey().equals("Nombre")) {
-                    opcion = 2;
-                } else if (entrada.getKey().equals("Apellido")) {
-                    opcion = 3;
-                } else if (entrada.getKey().equals("Carrera")) {
-                    opcion = 4;
-                } else if (entrada.getKey().equals("Password")) {
-                    opcion = 5;
-                }
-                CargaUsuarios(entrada.getValue());
-            }
 
-        } else if (elemento.isJsonArray()) {
-            JsonArray array = elemento.getAsJsonArray();
-            System.out.println("Es array. Numero de elementos: " + array.size());
-            java.util.Iterator<JsonElement> iter = array.iterator();
-            while (iter.hasNext()) {
-                JsonElement entrada = iter.next();
-                CargaUsuarios(entrada);
-            }
-        } else if (elemento.isJsonPrimitive()) {
-            JsonPrimitive valor = elemento.getAsJsonPrimitive();
-            switch (opcion) {
-                case 1:
-                    System.out.println("Carnet:" + valor.getAsString());
-                    break;
-                case 2:
-                    System.out.println("Nombre:" + valor.getAsString());
-                    break;
-                case 3:
-                    System.out.println("Apellido:" + valor.getAsString());
-                    break;
-                case 4:
-                    System.out.println("Carrera:" + valor.getAsString());
-                    break;
-                    case 5:
-                    System.out.println("Password:" + valor.getAsString());
-                    break;
-
-            }
-        } else if (elemento.isJsonNull()) {
-            System.out.println("Es NULL");
-        } else {
-            System.out.println("Es otra cosa");
-        }
-    }
     /**
      * @param args the command line arguments
      */
@@ -214,13 +173,40 @@ public static void CargaUsuarios(JsonElement elemento) {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JTextField jTNombreIngreso;
-    private javax.swing.JTextField jTPassIngreso;
     // End of variables declaration//GEN-END:variables
+
+
+public static String getMd5(String input) 
+    { 
+        try { 
+  
+            // Static getInstance method is called with hashing MD5 
+            MessageDigest md = MessageDigest.getInstance("MD5"); 
+  
+            // digest() method is called to calculate message digest 
+            //  of an input digest() return array of byte 
+            byte[] messageDigest = md.digest(input.getBytes()); 
+  
+            // Convert byte array into signum representation 
+            BigInteger no = new BigInteger(1, messageDigest); 
+  
+            // Convert message digest into hex value 
+            String hashtext = no.toString(16); 
+            while (hashtext.length() < 32) { 
+                hashtext = "0" + hashtext; 
+            } 
+            return hashtext; 
+        }  
+  
+        // For specifying wrong message digest algorithms 
+        catch (NoSuchAlgorithmException e) { 
+            throw new RuntimeException(e); 
+        } 
+    } 
+
 }

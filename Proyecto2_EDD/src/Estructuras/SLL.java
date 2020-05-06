@@ -48,7 +48,7 @@ public class SLL {
         NodeSLL aux = root;
 
         while (aux != null) {
-            System.out.println(aux.getEstudiante().getNombre());
+            System.out.println(aux.getEstudiante());
             aux = aux.getSig();
         }
     }

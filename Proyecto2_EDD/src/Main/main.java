@@ -19,13 +19,17 @@ public class main {
         /*Estudiante estudiante1 = new Estudiante(201700870, "Roberto", "Hernandez", "Sistemas", "1456");
         Estudiante estudiante2 = new Estudiante(201700914, "Enrique", "Calvillo", "Civil", "14871");
         Estudiante estudiante3 = new Estudiante(201704512, "Ericka", "Rivera", "Civil", "144781");
+        Estudiante estudiante4 = new Estudiante(201700825, "Danni", "Phantom", "Sistemas", "14756");
         
         TablaHash tablaH = new TablaHash(45);
         tablaH.insert(estudiante1);
         tablaH.insert(estudiante2);
-        tablaH.insert(estudiante3);*/
+        tablaH.insert(estudiante3);
+        tablaH.insert(estudiante4);
+        tablaH.print();*/
         VentanaPrincipal ventanaPrincpal = new VentanaPrincipal();
         ventanaPrincpal.setVisible(true);
+        ventanaPrincpal.setLocationRelativeTo(null);
         
 
         

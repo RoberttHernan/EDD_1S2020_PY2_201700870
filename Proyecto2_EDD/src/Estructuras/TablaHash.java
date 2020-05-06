@@ -18,7 +18,7 @@ public class TablaHash {
 
     public void insert(Estudiante estudiante) {
         if (buscar(estudiante.getCarnet()) != null) {
-            System.out.println("Carnet: " + estudiante.getCarnet() +" Ya registrado");
+            System.out.println("Carnet: " + estudiante.getCarnet() + " Ya registrado");
         } else {
             int casilla = funcionHash(estudiante.getCarnet());
             if (casilla <= 45) {
@@ -43,6 +43,20 @@ public class TablaHash {
             return elementos[casillas - 1].buscar(carnet);
         }
 
+    }
+
+    public void print() {
+        int i  = 0;
+        while (i<=elementos.length-1){
+        if (elementos[i]==null){
+        i++;
+        }else {
+            System.out.println("Casilla"+ i);
+        elementos[i].print();
+        i++;
+        }
+        }
+        
     }
 
     public SLL[] getElementos() {

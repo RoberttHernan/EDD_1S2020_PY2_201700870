@@ -5,6 +5,7 @@ package Otras_Clases;
  * @author Robert Hernadez
  */
 public class Estudiante {
+
     private int carnet;
     private String nombre;
     private String apellido;
@@ -18,13 +19,13 @@ public class Estudiante {
         this.carrera = carrera;
         this.password = password;
     }
-    
-    public Estudiante (){
-    this.carnet =20000000;
-    this.nombre="";
-    this.apellido ="";
-    this.carrera="";
-    this.password ="1234";
+
+    public Estudiante() {
+        this.carnet = 20000000;
+        this.nombre = "";
+        this.apellido = "";
+        this.carrera = "";
+        this.password = "1234";
     }
 
     public int getCarnet() {
@@ -66,6 +67,13 @@ public class Estudiante {
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "Nombre: " + nombre + " " + apellido + "\n"
+                + " Carnet: " + carnet + "\n"
+                + "Carrera : " + carrera + "\n";
+
+    }
+
 }
