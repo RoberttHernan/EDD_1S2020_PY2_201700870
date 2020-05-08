@@ -1,17 +1,30 @@
+<<<<<<< Updated upstream
 package Conexion;
 
 import java.io.DataInputStream;
+=======
+
+package Conexion;
+
+import java.io.DataInput;
+import java.io.DataInputStream;
+import java.io.DataOutput;
+>>>>>>> Stashed changes
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+<<<<<<< Updated upstream
 import java.util.Scanner;
+=======
+>>>>>>> Stashed changes
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
  *
+<<<<<<< Updated upstream
  * @author Robert Hernandez Clase con los metodos que realizaran la conexion del
  * servidor de la aplicación
  */
@@ -107,4 +120,83 @@ public class Servidor {
     });
     
     }
+=======
+ * @author Roberto Calvillo
+ */
+public class Servidor {
+   private Socket socket;
+    private ServerSocket serverSocket;
+    private DataInputStream bufferDeEntrada = null;
+    private DataOutputStream bufferDeSalida = null;
+    
+    public void LevantarConexion (int puerto) throws IOException{
+        serverSocket = new ServerSocket(puerto);
+        socket = serverSocket.accept();
+        JOptionPane.showMessageDialog(null, "Conexion establecida con: "+ socket.getInetAddress().getHostName());
+        
+    }
+    
+    public void Flujos() throws IOException{
+    bufferDeEntrada = new DataInputStream(socket.getInputStream());
+    bufferDeSalida = new DataOutputStream(socket.getOutputStream());
+    bufferDeSalida.flush();
+    }
+    
+    public void RecibirDatos() throws IOException{
+    String st;
+    while (true){
+    st = (String) bufferDeEntrada.readUTF();
+    JOptionPane.showMessageDialog(null, st);
+    
+    }
+    }
+    
+    public void enviar (String s) throws IOException{
+    bufferDeSalida.writeUTF(s);
+    bufferDeSalida.flush();
+    }
+    
+    public void CerrarConexion () throws IOException{
+        bufferDeEntrada.close();
+    bufferDeSalida.close();
+    socket.close();
+    
+    }
+    public void EjecutarConexio (int puerto){
+    
+    Thread hilo = new Thread (new Runnable() {
+
+        @Override
+        public void run() {
+            while (true){
+                try {
+                    LevantarConexion(puerto);
+                    Flujos();
+                    RecibirDatos();
+                } catch (IOException ex) {
+                  
+                }
+                finally{
+                    try {
+                        CerrarConexion();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
+        }
+    });
+    hilo.start();
+    }
+   
+   
+  
+   
+   
+        
+    
+    
+    
+>>>>>>> Stashed changes
 }
