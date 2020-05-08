@@ -5,6 +5,7 @@
  */
 package Vistas;
 
+import Conexion.Servidor;
 import Estructuras.TablaHash;
 import Otras_Clases.Estudiante;
 import com.google.gson.JsonArray;
@@ -34,6 +35,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     public VentanaPrincipal() {
         initComponents();
+        Servidor server = new Servidor();
+        server.EjecutarConexio(5050);
+        
     }
 
     public TablaHash getTabla() {
