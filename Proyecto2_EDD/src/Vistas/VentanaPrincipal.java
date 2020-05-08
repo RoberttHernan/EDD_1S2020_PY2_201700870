@@ -20,7 +20,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -35,14 +34,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     public VentanaPrincipal() {
         initComponents();
-<<<<<<< HEAD
 
         Servidor server = new Servidor();
        server.ejecutarConexion(5050);
         
 
-=======
->>>>>>> parent of 61f79c1... Server creado
     }
 
     public TablaHash getTabla() {
