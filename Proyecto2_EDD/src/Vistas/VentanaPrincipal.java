@@ -19,6 +19,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -33,12 +34,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     public VentanaPrincipal() {
         initComponents();
-<<<<<<< Updated upstream
-=======
-        Servidor server = new Servidor();
-       server.ejecutarConexion(5050);
-        
->>>>>>> Stashed changes
     }
 
     public TablaHash getTabla() {
