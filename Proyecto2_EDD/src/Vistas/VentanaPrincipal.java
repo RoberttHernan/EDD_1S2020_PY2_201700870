@@ -8,35 +8,44 @@ package Vistas;
 import Conexion.Servidor;
 import Estructuras.TablaHash;
 import Otras_Clases.Estudiante;
+import PaquetesEnvio.PaqueteUsuario;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.math.BigInteger;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
  * @author robea
  */
-public class VentanaPrincipal extends javax.swing.JFrame {
-
+public class VentanaPrincipal extends javax.swing.JFrame implements Runnable{
+    private Servidor server ;
     private TablaHash tabla = new TablaHash(45);
-    Servidor server = new Servidor();
+   
 
     static int opcion = 0;
 
     public VentanaPrincipal() {
         initComponents();
-        server.ejecutarConexion(5050);
+        Thread miHilo = new Thread(this);
+        miHilo.start();
+       
+       
+       
     }
 
     public TablaHash getTabla() {
@@ -57,6 +66,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -65,6 +76,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vistas/Imagenes/LogoProyecto.PNG"))); // NOI18N
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
 
         jMenu1.setText("Carga Masiva");
 
@@ -90,13 +105,20 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(74, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(34, 34, 34)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(63, Short.MAX_VALUE))
         );
 
@@ -171,6 +193,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new VentanaPrincipal().setVisible(true);
+                
             }
         });
     }
@@ -181,6 +204,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 
 
@@ -211,5 +236,36 @@ public static String getMd5(String input)
             throw new RuntimeException(e); 
         } 
     } 
+
+    @Override
+    public void run() {
+        try {
+            ServerSocket servidor = new ServerSocket(5050);
+            
+            int Carnet;
+            String password;
+           
+            PaqueteUsuario user ;
+            
+            
+            while (true){
+            Socket misocket = servidor.accept();
+                ObjectInputStream flujo_entrada = new ObjectInputStream(misocket.getInputStream());
+               
+                    user = (PaqueteUsuario) flujo_entrada.readObject();
+                    System.out.println(user.getCarnet());
+                    
+                
+            
+           
+            misocket.close();
+            }
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+
 
 }
