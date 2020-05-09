@@ -5,6 +5,7 @@
  */
 package Vistas;
 
+import Conexion.Servidor;
 import Estructuras.TablaHash;
 import Otras_Clases.Estudiante;
 import com.google.gson.JsonArray;
@@ -29,11 +30,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class VentanaPrincipal extends javax.swing.JFrame {
 
     private TablaHash tabla = new TablaHash(45);
+    Servidor server = new Servidor();
 
     static int opcion = 0;
 
     public VentanaPrincipal() {
         initComponents();
+        server.ejecutarConexion(5050);
     }
 
     public TablaHash getTabla() {

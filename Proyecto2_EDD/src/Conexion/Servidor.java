@@ -21,7 +21,6 @@ public class Servidor {
     private ServerSocket serverSocket;
     private DataInputStream bufferDeEntrada;
     private DataOutputStream bufferDeSalida;
-    final String COMANDO_TERMINACION = "salir()";
 
     public Servidor() {
         this.bufferDeEntrada = null;
@@ -34,9 +33,8 @@ public class Servidor {
     public void LevantarConexion(int puerto) {
         try {
             serverSocket = new ServerSocket(puerto);
-            System.out.println("Esperando conexion entrante en el puerto" + String.valueOf(puerto));
             socket = serverSocket.accept();
-            System.out.println("Conexión establecida con: " + socket.getInetAddress().getHostName() + "\n\n\n");
+            JOptionPane.showMessageDialog(null, "Conexión establecida con: " + socket.getInetAddress().getHostName());
         } catch (Exception e) {
             System.out.println("Error en levantarConexion(): " + e.getMessage());
         }
@@ -54,7 +52,18 @@ public class Servidor {
             System.out.println("Error en la apertura de flujos");
         }
     }
-
+public void recibirDatos() {
+        String st = "";
+        try {
+            while (true) {
+                st = (String) bufferDeEntrada.readUTF();
+                JOptionPane.showMessageDialog(null, st);
+            } 
+        } catch (IOException e) {
+            CerrarConexion();
+        }
+    }
+     
     /**
      * Funcion para enviar datos (Strings)
      *
