@@ -16,12 +16,16 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.sun.corba.se.impl.io.OutputStreamHook;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -294,6 +298,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable{
             JOptionPane.showMessageDialog(rootPane, "Esperando Conexion en :" + puerto);
             int Carnet;
             String password;
+            String respuesta;
 
             PaqueteUsuario user;
 
@@ -304,7 +309,17 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable{
                 byte tipo = flujo_entrada.readByte();
                 if (tipo == 1) {
                     user = (PaqueteUsuario) flujo_entrada.readObject();
-                    System.out.println(user.getCarnet()+"-" + user.getPassword());
+                    Estudiante estudent = tabla.buscar(user.getCarnet());
+                    
+                    if (estudent == null){
+                    respuesta = "fail";
+                    }
+                    else {
+                    respuesta = "Encontrado";
+                    }
+                    
+                    DataOutputStream flujo_salida = new DataOutputStream(misocket.getOutputStream());
+                    flujo_salida.writeUTF(respuesta);
                     
                     
                 }
@@ -336,9 +351,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable{
         this.jLabelMostrarPuerto = jLabelMostrarPuerto;
     }
     
-    /*public Estudiante BuscarDevolverEstudiante (int carnet, String password){
     
-    
-    }*/
 
 }

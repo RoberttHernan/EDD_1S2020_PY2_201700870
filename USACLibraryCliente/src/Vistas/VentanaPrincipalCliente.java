@@ -8,7 +8,9 @@ package Vistas;
 import Conexion.Cliente;
 import PaquetesEnvio.Estudiante;
 import PaquetesEnvio.PaqueteUsuario;
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.net.Socket;
@@ -100,6 +102,10 @@ public class VentanaPrincipalCliente extends javax.swing.JFrame {
                 //id del tipo de mensaje enviado
                 paquete_datos.write(1);
                 paquete_datos.writeObject(user);
+                
+                DataInputStream flujo_entrada = new DataInputStream(miSocket.getInputStream());
+                String entrada = flujo_entrada.readUTF();
+                System.out.println(entrada);
             }
           
 
