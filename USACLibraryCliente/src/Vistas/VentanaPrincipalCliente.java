@@ -5,11 +5,20 @@
  */
 package Vistas;
 
+import Conexion.Cliente;
+import PaquetesEnvio.Estudiante;
 import PaquetesEnvio.PaqueteUsuario;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.math.BigInteger;
 import java.net.Socket;
-
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,11 +26,14 @@ import java.net.Socket;
  */
 public class VentanaPrincipalCliente extends javax.swing.JFrame {
 
+    
+
     /**
      * Creates new form VentanaPrincipalCliente
      */
     public VentanaPrincipalCliente() {
         initComponents();
+        
 
     }
 
@@ -36,7 +48,7 @@ public class VentanaPrincipalCliente extends javax.swing.JFrame {
 
         jButton1 = new javax.swing.JButton();
         jTextCarnetIngreso = new javax.swing.JTextField();
-        jTextPasswordIngreso = new javax.swing.JTextField();
+        jPasswordIngresoCliente = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -47,33 +59,30 @@ public class VentanaPrincipalCliente extends javax.swing.JFrame {
             }
         });
 
-        jTextCarnetIngreso.setText("Carnet");
-
-        jTextPasswordIngreso.setText("Password");
+        jTextCarnetIngreso.setText("201");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(101, 101, 101)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(219, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jTextPasswordIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextCarnetIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(128, Short.MAX_VALUE))
+                    .addComponent(jTextCarnetIngreso, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+                    .addComponent(jPasswordIngresoCliente))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(62, 62, 62)
+                .addContainerGap()
                 .addComponent(jTextCarnetIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addComponent(jTextPasswordIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
+                .addGap(18, 18, 18)
+                .addComponent(jPasswordIngresoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
                 .addComponent(jButton1)
-                .addContainerGap(114, Short.MAX_VALUE))
+                .addContainerGap(179, Short.MAX_VALUE))
         );
 
         pack();
@@ -82,11 +91,17 @@ public class VentanaPrincipalCliente extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
         try {
-            Socket miSocket = new Socket("192.168.56.1", 5050);
-           PaqueteUsuario user = new PaqueteUsuario(Integer.parseInt(jTextCarnetIngreso.getText()),jTextPasswordIngreso.getText());
-            ObjectOutputStream paquete_datos = new ObjectOutputStream(miSocket.getOutputStream());
-            paquete_datos.writeObject(user);
-            miSocket.close();
+            
+            InetAddress address = InetAddress.getLocalHost();
+            try (Socket miSocket = new Socket(address, 5050)) {
+                String valorPass = new String(jPasswordIngresoCliente.getPassword());
+                PaqueteUsuario user = new PaqueteUsuario(Integer.parseInt(jTextCarnetIngreso.getText()), getMd5(valorPass));
+                ObjectOutputStream paquete_datos = new ObjectOutputStream(miSocket.getOutputStream());
+                //id del tipo de mensaje enviado
+                paquete_datos.write(1);
+                paquete_datos.writeObject(user);
+            }
+          
 
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
@@ -129,11 +144,34 @@ public class VentanaPrincipalCliente extends javax.swing.JFrame {
         });
     }
 
-     
+    private static String getMd5(String input) {
+        try {
+
+            // Static getInstance method is called with hashing MD5 
+            MessageDigest md = MessageDigest.getInstance("MD5");
+
+            // digest() method is called to calculate message digest 
+            //  of an input digest() return array of byte 
+            byte[] messageDigest = md.digest(input.getBytes());
+
+            // Convert byte array into signum representation 
+            BigInteger no = new BigInteger(1, messageDigest);
+
+            // Convert message digest into hex value 
+            String hashtext = no.toString(16);
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            return hashtext;
+        } // For specifying wrong message digest algorithms 
+        catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JPasswordField jPasswordIngresoCliente;
     private javax.swing.JTextField jTextCarnetIngreso;
-    private javax.swing.JTextField jTextPasswordIngreso;
     // End of variables declaration//GEN-END:variables
 }

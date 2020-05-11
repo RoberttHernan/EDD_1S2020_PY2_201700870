@@ -7,13 +7,17 @@ package Vistas;
 
 import Conexion.Servidor;
 import Estructuras.TablaHash;
-import Otras_Clases.Estudiante;
+import PaquetesEnvio.Estudiante;
 import PaquetesEnvio.PaqueteUsuario;
+
+
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -26,26 +30,33 @@ import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.bind.ParseConversionEvent;
 
 /**
  *
  * @author robea
  */
 public class VentanaPrincipal extends javax.swing.JFrame implements Runnable{
-    private Servidor server ;
+
+    private Servidor server;
     private TablaHash tabla = new TablaHash(45);
-   
+
+    Ventana_ConfiguracionPuerto Ventanaconfiguracion = new Ventana_ConfiguracionPuerto(this, true);
 
     static int opcion = 0;
+    private int puerto=5050;
+    
+    
 
     public VentanaPrincipal() {
+        
         initComponents();
         Thread miHilo = new Thread(this);
         miHilo.start();
-       
-       
-       
+
     }
 
     public TablaHash getTabla() {
@@ -66,20 +77,27 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable{
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jLabelMostrarPuerto = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vistas/Imagenes/LogoProyecto.PNG"))); // NOI18N
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        jTextField1.setText("jTextField1");
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("Carga Masiva");
 
@@ -94,6 +112,15 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable{
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Configuracion");
+
+        jMenuItem2.setText("Configurar Puerto");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem2);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -102,24 +129,34 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable{
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabelMostrarPuerto)
+                .addGap(81, 81, 81))
             .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(62, 62, 62)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton1)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(34, 34, 34)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(63, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jLabelMostrarPuerto)
+                .addGap(9, 9, 9)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         pack();
@@ -146,11 +183,10 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable{
                 String nombre = g.get("Nombre").getAsString();
                 String apellido = g.get("Apellido").getAsString();
                 String carrera = g.get("Carrera").getAsString();
-                String pass = getMd5(g.get("Password").getAsString());
+                String pass = g.get("Password").getAsString();
                 System.out.println(pass);
                 Estudiante estudiante = new Estudiante(carnet, nombre, apellido, carrera, pass);
                 tabla.insert(estudiante);
-               
 
             }
 
@@ -161,6 +197,22 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable{
 
 
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        Ventanaconfiguracion.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                puerto = Ventanaconfiguracion.getPuerto();
+                jLabelMostrarPuerto.setText("Puerto: " + puerto);
+            }
+
+        });
+        Ventanaconfiguracion.setVisible(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        server.enviar("hola");
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -193,79 +245,100 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable{
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new VentanaPrincipal().setVisible(true);
-                
+
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabelMostrarPuerto;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
+    public static String getMd5(String input) {
+        try {
 
-public static String getMd5(String input) 
-    { 
-        try { 
-  
             // Static getInstance method is called with hashing MD5 
-            MessageDigest md = MessageDigest.getInstance("MD5"); 
-  
+            MessageDigest md = MessageDigest.getInstance("MD5");
+
             // digest() method is called to calculate message digest 
             //  of an input digest() return array of byte 
-            byte[] messageDigest = md.digest(input.getBytes()); 
-  
+            byte[] messageDigest = md.digest(input.getBytes());
+
             // Convert byte array into signum representation 
-            BigInteger no = new BigInteger(1, messageDigest); 
-  
+            BigInteger no = new BigInteger(1, messageDigest);
+
             // Convert message digest into hex value 
-            String hashtext = no.toString(16); 
-            while (hashtext.length() < 32) { 
-                hashtext = "0" + hashtext; 
-            } 
-            return hashtext; 
-        }  
-  
-        // For specifying wrong message digest algorithms 
-        catch (NoSuchAlgorithmException e) { 
-            throw new RuntimeException(e); 
-        } 
-    } 
+            String hashtext = no.toString(16);
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            return hashtext;
+        } // For specifying wrong message digest algorithms 
+        catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public void run() {
         try {
-            ServerSocket servidor = new ServerSocket(5050);
-            
+            ServerSocket servidor = new ServerSocket(this.puerto);
+            JOptionPane.showMessageDialog(rootPane, "Esperando Conexion en :" + puerto);
             int Carnet;
             String password;
-           
-            PaqueteUsuario user ;
-            
-            
-            while (true){
-            Socket misocket = servidor.accept();
+
+            PaqueteUsuario user;
+
+            while (true) {
+                Socket misocket = servidor.accept();
                 ObjectInputStream flujo_entrada = new ObjectInputStream(misocket.getInputStream());
-               
+
+                byte tipo = flujo_entrada.readByte();
+                if (tipo == 1) {
                     user = (PaqueteUsuario) flujo_entrada.readObject();
-                    System.out.println(user.getCarnet());
+                    System.out.println(user.getCarnet()+"-" + user.getPassword());
                     
-                
-            
-           
-            misocket.close();
+                    
+                }
+                if (tipo == 2) {
+                    System.out.println(2);
+                }
+
+              
+                misocket.close();
             }
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
 
+    public int getPuerto() {
+        return puerto;
+    }
+
+    public void setPuerto(int puerto) {
+        this.puerto = puerto;
+    }
+
+    public JLabel getjLabelMostrarPuerto() {
+        return jLabelMostrarPuerto;
+    }
+
+    public void setjLabelMostrarPuerto(JLabel jLabelMostrarPuerto) {
+        this.jLabelMostrarPuerto = jLabelMostrarPuerto;
+    }
+    
+    /*public Estudiante BuscarDevolverEstudiante (int carnet, String password){
+    
+    
+    }*/
 
 }

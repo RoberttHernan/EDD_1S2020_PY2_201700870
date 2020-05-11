@@ -1,6 +1,8 @@
 package Estructuras;
 
-import Otras_Clases.Estudiante;
+import PaquetesEnvio.Estudiante;
+
+
 
 /**
  *

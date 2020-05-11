@@ -1,12 +1,13 @@
 package Main;
 
-import Estructuras.ArbolAvl;
-import Estructuras.BTree;
-import Estructuras.TablaHash;
-import Otras_Clases.Estudiante;
-import Otras_Clases.Libro;
+import PaquetesEnvio.PaqueteUsuario;
 import Vistas.VentanaPrincipal;
-import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,6 +16,7 @@ import java.io.FileWriter;
  */
 public class main {
 
+    VentanaPrincipal ventana = new VentanaPrincipal();
     public static void main(String[] args) {
         /*Estudiante estudiante1 = new Estudiante(201700870, "Roberto", "Hernandez", "Sistemas", "1456");
         Estudiante estudiante2 = new Estudiante(201700914, "Enrique", "Calvillo", "Civil", "14871");
@@ -81,5 +83,7 @@ public class main {
         } catch (Exception e) {
         }
     }
+
+    
 
 }

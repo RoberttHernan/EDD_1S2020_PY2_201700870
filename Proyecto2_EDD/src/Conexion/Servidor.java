@@ -47,19 +47,19 @@ public class Servidor {
     }
 
     public void RecibirDatos() {
-        String st ="";
+        String st = "";
         try {
-        do{
-        st = (String) bufferEntrada.readUTF();
-            System.out.println(st);
-        
-        }while(!st.equals("salid()"));
-        }catch (IOException e){
-        cerrarConexion();
+            do {
+                st = (String) bufferEntrada.readUTF();
+                JOptionPane.showMessageDialog(null, st);
+
+            } while (true);
+        } catch (IOException e) {
+            cerrarConexion();
         }
     }
-    
-    public void enviar (String s){
+
+    public void enviar(String s) {
         try {
             bufferSalida.writeUTF(s);
             bufferSalida.flush();
@@ -67,8 +67,8 @@ public class Servidor {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void cerrarConexion (){
+
+    public void cerrarConexion() {
         try {
             bufferEntrada.close();
             bufferSalida.close();
@@ -77,20 +77,6 @@ public class Servidor {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public void ejecutarConexion(int puerto){
-    
-    Thread hilo = new Thread (() -> {
-        while (true){
-            try {
-            levantarConexion(puerto);
-            Flujos();
-            RecibirDatos();
-            }finally {
-            cerrarConexion();
-            }
-        }
-    });
-    hilo.start();
-    }
-}
 
+   
+}
