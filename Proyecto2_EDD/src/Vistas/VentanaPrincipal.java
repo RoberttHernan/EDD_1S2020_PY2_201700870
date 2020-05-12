@@ -10,8 +10,6 @@ import Estructuras.TablaHash;
 import PaquetesEnvio.Estudiante;
 import PaquetesEnvio.PaqueteUsuario;
 
-
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -43,7 +41,7 @@ import javax.xml.bind.ParseConversionEvent;
  *
  * @author robea
  */
-public class VentanaPrincipal extends javax.swing.JFrame implements Runnable{
+public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
 
     private Servidor server;
     private TablaHash tabla = new TablaHash(45);
@@ -51,12 +49,10 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable{
     Ventana_ConfiguracionPuerto Ventanaconfiguracion = new Ventana_ConfiguracionPuerto(this, true);
 
     static int opcion = 0;
-    private int puerto=5050;
-    
-    
+    private int puerto = 5050;
 
     public VentanaPrincipal() {
-        
+
         initComponents();
         Thread miHilo = new Thread(this);
         miHilo.start();
@@ -215,7 +211,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable{
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        server.enviar("hola");
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -310,24 +306,18 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable{
                 if (tipo == 1) {
                     user = (PaqueteUsuario) flujo_entrada.readObject();
                     Estudiante estudent = tabla.buscar(user.getCarnet());
-                    
-                    if (estudent == null){
-                    respuesta = "fail";
-                    }
-                    else {
-                    respuesta = "Encontrado";
-                    }
-                    
                     DataOutputStream flujo_salida = new DataOutputStream(misocket.getOutputStream());
-                    flujo_salida.writeUTF(respuesta);
-                    
-                    
+                    if (estudent != null && estudent.getPassword().equals(user.getPassword())) {
+                        flujo_salida.writeInt(estudent.getCarnet());
+                    } else {
+                        flujo_salida.writeInt(0);
+                    }
+
                 }
                 if (tipo == 2) {
                     System.out.println(2);
                 }
 
-              
                 misocket.close();
             }
         } catch (IOException | ClassNotFoundException ex) {
@@ -350,7 +340,5 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable{
     public void setjLabelMostrarPuerto(JLabel jLabelMostrarPuerto) {
         this.jLabelMostrarPuerto = jLabelMostrarPuerto;
     }
-    
-    
 
 }
