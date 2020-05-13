@@ -1,0 +1,11 @@
+digraph grafica{
+rankdir=TB;
+node [shape = record, style=filled, fillcolor=seashell2];
+nodo1311053135 [ label ="<C0>|Ficcion|<C1>"];
+nodo118352462 [ label ="Accion"];
+nodo1311053135:C0->nodo118352462
+nodo1550089733 [ label ="<C0>|Miedo|<C1>"];
+nodo865113938 [ label ="Romance"];
+nodo1550089733:C1->nodo865113938
+nodo1311053135:C1->nodo1550089733
+}
