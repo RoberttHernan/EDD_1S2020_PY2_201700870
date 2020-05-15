@@ -1,10 +1,12 @@
 package Otras_Clases;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Robert Hernandez
  */
- public class Libro {
+ public class Libro implements Serializable{
     private int isbn;
     private String Titulo;
     private String Autor;
@@ -22,7 +24,7 @@ package Otras_Clases;
     this.editorial="";
     this.anio=2000;
     this.edicion = 1;
-    this.Categoria="Sin Categoria";
+    this.Categoria="";
     this.idioma = "";
     this.carnet =0;
     
@@ -30,11 +32,19 @@ package Otras_Clases;
     
     }
 
-    public Libro(int isbn, String Titulo, int carnet) {
+    public Libro(int isbn, String Titulo, String Autor, String editorial, int anio, int edicion, String Categoria, String idioma, int carnet) {
         this.isbn = isbn;
         this.Titulo = Titulo;
+        this.Autor = Autor;
+        this.editorial = editorial;
+        this.anio = anio;
+        this.edicion = edicion;
+        this.Categoria = Categoria;
+        this.idioma = idioma;
         this.carnet = carnet;
     }
+
+    
     
 
     

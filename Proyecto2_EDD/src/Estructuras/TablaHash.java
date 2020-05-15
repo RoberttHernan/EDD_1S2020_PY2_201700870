@@ -2,8 +2,6 @@ package Estructuras;
 
 import PaquetesEnvio.Estudiante;
 
-
-
 /**
  *
  * @author Robert Hernandez
@@ -48,17 +46,18 @@ public class TablaHash {
     }
 
     public void print() {
-        int i  = 0;
-        while (i<=elementos.length-1){
-        if (elementos[i]==null){
-        i++;
-        }else {
-            System.out.println("Casilla"+ i);
-        elementos[i].print();
-        i++;
+        int i = 0;
+        while (i <= elementos.length - 1) {
+            if (elementos[i]== null) {
+                i++;
+            } else {
+                
+               System.out.println("Casilla" + i);
+                elementos[i].print();
+                i++;
+            }
         }
-        }
-        
+
     }
 
     public SLL[] getElementos() {
@@ -77,4 +76,23 @@ public class TablaHash {
         this.tamanio = tamanio;
     }
 
+    public void EditarEstudiante(Estudiante auxiliar) {
+        Estudiante aux = buscar(auxiliar.getCarnet());
+
+        if (aux != null) {
+            aux.setNombre(auxiliar.getNombre());
+            aux.setApellido(auxiliar.getApellido());
+            aux.setCarrera(auxiliar.getCarrera());
+            aux.setPassword(auxiliar.getPassword());
+        }
+
+    }
+
+    public void Eliminar (int carnet){
+        int casilla = funcionHash(carnet);
+        
+        
+        elementos[casilla-1].Borrar(carnet);
+    
+    }
 }

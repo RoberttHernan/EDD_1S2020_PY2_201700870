@@ -8,6 +8,8 @@ package Vistas;
 import Conexion.Cliente;
 import PaquetesEnvio.Estudiante;
 import PaquetesEnvio.PaqueteUsuario;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -30,13 +32,18 @@ import javax.swing.JOptionPane;
 public class VentanaPrincipalCliente extends javax.swing.JFrame {
 
     private int CarnetUsuario;
+    public static int puerto = 5050;
+
+    public static Estudiante estudiante = new Estudiante();
+    ConfiguracionPuertoVentana configPuertoVentana = new ConfiguracionPuertoVentana(this, rootPaneCheckingEnabled);
+    VentanaSecunciariaCliente ventanaSecundariaCliente = new VentanaSecunciariaCliente(this, rootPaneCheckingEnabled);
 
     /**
      * Creates new form VentanaPrincipalCliente
      */
     public VentanaPrincipalCliente() {
         initComponents();
-        
+        this.setLocationRelativeTo(null);
 
     }
 
@@ -54,6 +61,10 @@ public class VentanaPrincipalCliente extends javax.swing.JFrame {
         jPasswordIngresoCliente = new javax.swing.JPasswordField();
         jButtonVerBibliotecaVirtual = new javax.swing.JButton();
         jLabelUsuario = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -65,6 +76,23 @@ public class VentanaPrincipalCliente extends javax.swing.JFrame {
         });
 
         jButtonVerBibliotecaVirtual.setText("Ver Todos los libros");
+
+        jMenu1.setText("Configuracion");
+
+        jMenuItem1.setText("Configurar Puerto");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuItem2.setText("Eliminar Usuario");
+        jMenu1.add(jMenuItem2);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -79,12 +107,9 @@ public class VentanaPrincipalCliente extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonIngresoCliente)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(jTextCarnetIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap())
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(jPasswordIngresoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap()))))
+                        .addComponent(jTextCarnetIngreso, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPasswordIngresoCliente, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -97,9 +122,9 @@ public class VentanaPrincipalCliente extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jPasswordIngresoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonVerBibliotecaVirtual, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(16, 16, 16)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonIngresoCliente)
-                .addContainerGap(180, Short.MAX_VALUE))
+                .addContainerGap(169, Short.MAX_VALUE))
         );
 
         pack();
@@ -108,36 +133,57 @@ public class VentanaPrincipalCliente extends javax.swing.JFrame {
     private void jButtonIngresoClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonIngresoClienteActionPerformed
 
         try {
-            
+
             InetAddress address = InetAddress.getLocalHost();
-            try (Socket miSocket = new Socket(address, 5050)) {
+            try (Socket miSocket = new Socket(address, puerto)) {
                 String valorPass = new String(jPasswordIngresoCliente.getPassword());
                 PaqueteUsuario user = new PaqueteUsuario(Integer.parseInt(jTextCarnetIngreso.getText()), getMd5(valorPass));
                 ObjectOutputStream paquete_datos = new ObjectOutputStream(miSocket.getOutputStream());
                 //id del tipo de mensaje enviado
                 paquete_datos.write(1);
                 paquete_datos.writeObject(user);
-                
-                DataInputStream flujo_entrada = new DataInputStream(miSocket.getInputStream());
-                int entrada = flujo_entrada.readInt();
-                
-                if (entrada !=0){
-                this.CarnetUsuario = entrada;
-                jLabelUsuario.setText("Usuario :" +String.valueOf(CarnetUsuario));
+                paquete_datos.flush();
+
+                ObjectInputStream flujo_entrada = new ObjectInputStream(miSocket.getInputStream());
+                Estudiante entrada = (Estudiante) flujo_entrada.readObject();
+
+                if (entrada != null) {
+                    // this.CarnetUsuario = entrada.getCarnet();
+                    estudiante = entrada;
+                    actualizarDatosEditarUsuario();//actualiza la ventana editar usuario
+
                     JOptionPane.showMessageDialog(rootPane, "Bienvenido!!");
-                this.jTextCarnetIngreso.setVisible(false);
-                this.jPasswordIngresoCliente.setVisible(false);
-                this.jButtonIngresoCliente.setVisible(false);
-               
+
+                    ventanaSecundariaCliente.setVisible(true);
+                    
+
+                    miSocket.close();
+
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Error de autenticacion de ususario");
                 }
+            } catch (ClassNotFoundException ex) {
+                JOptionPane.showMessageDialog(rootPane, "Error al conectar con el server");
             }
-          
 
         } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(rootPane, "Error de conexion");
         }
 
     }//GEN-LAST:event_jButtonIngresoClienteActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+
+        configPuertoVentana.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+                puerto = configPuertoVentana.getPuerto();
+            }
+        });
+
+        configPuertoVentana.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -174,6 +220,14 @@ public class VentanaPrincipalCliente extends javax.swing.JFrame {
         });
     }
 
+    private static void actualizarDatosEditarUsuario() {
+
+        EditarUsuario.jTextEditarNombreUsuario.setText(estudiante.getNombre());
+        EditarUsuario.jTextEditarApellidoUsuario.setText(estudiante.getApellido());
+        EditarUsuario.jTextEditarCarreraUsuario.setText(estudiante.getCarrera());
+
+    }
+
     private static String getMd5(String input) {
         try {
 
@@ -203,7 +257,12 @@ public class VentanaPrincipalCliente extends javax.swing.JFrame {
     private javax.swing.JButton jButtonIngresoCliente;
     private javax.swing.JButton jButtonVerBibliotecaVirtual;
     private javax.swing.JLabel jLabelUsuario;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPasswordField jPasswordIngresoCliente;
     private javax.swing.JTextField jTextCarnetIngreso;
     // End of variables declaration//GEN-END:variables
+
 }

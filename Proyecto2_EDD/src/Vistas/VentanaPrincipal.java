@@ -43,18 +43,19 @@ import javax.xml.bind.ParseConversionEvent;
  */
 public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
 
-    private Servidor server;
     private TablaHash tabla = new TablaHash(45);
+
 
     Ventana_ConfiguracionPuerto Ventanaconfiguracion = new Ventana_ConfiguracionPuerto(this, true);
 
     static int opcion = 0;
     private int puerto = 5050;
+    Thread miHilo = new Thread(this);
 
     public VentanaPrincipal() {
 
         initComponents();
-        Thread miHilo = new Thread(this);
+        this.setLocationRelativeTo(null);
         miHilo.start();
 
     }
@@ -78,8 +79,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
 
         jLabel1 = new javax.swing.JLabel();
         jLabelMostrarPuerto = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -89,15 +88,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vistas/Imagenes/LogoProyecto.PNG"))); // NOI18N
-
-        jTextField1.setText("jTextField1");
-
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
 
         jMenu1.setText("Carga Masiva");
 
@@ -129,21 +119,14 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(35, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(356, Short.MAX_VALUE)
                 .addComponent(jLabelMostrarPuerto)
                 .addGap(81, 81, 81))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(62, 62, 62)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(35, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -152,11 +135,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
                 .addComponent(jLabelMostrarPuerto)
                 .addGap(9, 9, 9)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
 
         pack();
@@ -210,10 +189,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
         Ventanaconfiguracion.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -251,7 +226,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelMostrarPuerto;
     private javax.swing.JMenu jMenu1;
@@ -259,7 +233,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
     public static String getMd5(String input) {
@@ -291,14 +264,13 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
     public void run() {
         try {
             ServerSocket servidor = new ServerSocket(this.puerto);
-            JOptionPane.showMessageDialog(rootPane, "Esperando Conexion en :" + puerto);
             int Carnet;
             String password;
             String respuesta;
 
             PaqueteUsuario user;
 
-            while (true) {
+            while (true) { 
                 Socket misocket = servidor.accept();
                 ObjectInputStream flujo_entrada = new ObjectInputStream(misocket.getInputStream());
 
@@ -306,22 +278,37 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
                 if (tipo == 1) {
                     user = (PaqueteUsuario) flujo_entrada.readObject();
                     Estudiante estudent = tabla.buscar(user.getCarnet());
-                    DataOutputStream flujo_salida = new DataOutputStream(misocket.getOutputStream());
+                    ObjectOutputStream flujo_salida = new ObjectOutputStream(misocket.getOutputStream());
                     if (estudent != null && estudent.getPassword().equals(user.getPassword())) {
-                        flujo_salida.writeInt(estudent.getCarnet());
+                        flujo_salida.writeObject(estudent);
                     } else {
-                        flujo_salida.writeInt(0);
+                        flujo_salida.writeObject(null);
+                        flujo_salida.flush();
                     }
 
                 }
                 if (tipo == 2) {
-                    System.out.println(2);
+                    Estudiante aux = (Estudiante) flujo_entrada.readObject();
+                    if (aux!= null){
+                    tabla.EditarEstudiante(aux);
+                    tabla.buscar(aux.getCarnet());
+                     ObjectOutputStream flujo_salida = new ObjectOutputStream(misocket.getOutputStream());
+                     flujo_salida.writeObject(aux);
+                     flujo_salida.flush();
+                    }
+                }
+                if (tipo == 3){
+                    Estudiante aux = (Estudiante) flujo_entrada.readObject();
+                    if ( aux!=null){
+                    tabla.Eliminar(aux.getCarnet());
+                    }
                 }
 
                 misocket.close();
             }
         } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+           // Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(rootPane, "Error "+ ex);
         }
     }
 

@@ -7,7 +7,8 @@ package Estructuras;
  */
 public class ArbolAvl {
 
-    NodoAvl raiz;
+    private NodoAvl raiz;
+    boolean opcion = false;
 
      int altura(NodoAvl N) {
         if (N == null) {
@@ -66,7 +67,7 @@ public class ArbolAvl {
 
     }
 
-    public NodoAvl insert(NodoAvl nodo, String clave) {
+    private NodoAvl insert(NodoAvl nodo, String clave) {
         if (nodo == null) {
             return (new NodoAvl(clave));
 
@@ -190,5 +191,33 @@ public class ArbolAvl {
     public void graficar(String path){
     raiz.graficar(path);
     }
+    public boolean EstaVacio(){
+     return raiz== null;
+    }
+  
+
+ private NodoAvl buscar (NodoAvl nodo, String Categoria){
+        if (nodo == null){
+        return null;
+        }
+        if (Categoria.equals(nodo.getCategoria())){
+        return nodo;
+        }
+        
+        return Categoria.compareTo(nodo.getCategoria())<    0
+                ?buscar(nodo.getIzquierda(), Categoria)
+                :buscar(nodo.getDerecha(), Categoria);
+        
+    }
+  
+  public NodoAvl search (String categoria){
+  return buscar(raiz, categoria);
+  }
+  public void Add (String categoria){
+  raiz = insert(raiz, categoria);
+  }
+   
+  
+    
 
 }

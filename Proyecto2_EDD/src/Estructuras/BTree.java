@@ -1,6 +1,8 @@
 package Estructuras;
 
 import Otras_Clases.Libro;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  *
@@ -90,6 +92,56 @@ public class BTree {
         return b.toString();
     }
 
+     static void doDot(String pInput, String pOutput) {
+        try {
+
+            String dotPath
+                    = "C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe";
+
+            String fileInputPath = pInput;
+            String fileOutputPath = pOutput;
+
+            String tParam = "-Tjpg";
+            String tOParam = "-o";
+
+            String[] cmd = new String[5];
+            cmd[0] = dotPath;
+            cmd[1] = tParam;
+            cmd[2] = fileInputPath;
+            cmd[3] = tOParam;
+            cmd[4] = fileOutputPath;
+
+            Runtime rt = Runtime.getRuntime();
+
+            rt.exec(cmd);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+        }
+        try {
+
+            String[] cmd = new String[4];
+            cmd[0] = "cmd";
+            cmd[1] = "/C";
+            cmd[2] = "start";
+            cmd[3] = pOutput;
+
+            Runtime rt = Runtime.getRuntime();
+
+            rt.exec(cmd);
+
+        } catch (Exception e) {
+        }
+    }
+     
+     public void graficar(String pInput, String pOutput) throws IOException {
+        FileWriter f = new FileWriter("graficas//arbolB.dot");
+
+        f.write(toDot());
+         f.close();
+         doDot(pInput, pOutput);
+    }
   
 
    
@@ -97,63 +149,6 @@ public class BTree {
 }
 
 
-/*
- *Graficar
 
- try {
 
- FileWriter f = new FileWriter("grafo1.txt");
 
- f.write(t.toDot());
-
- f.close();
-
- } catch (Exception e) {
- }
- doDot("grafo1.txt", "grafo1.jpg");
-
- static void doDot(String pInput, String pOutput) {
- try {
-
- String dotPath
- = "C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe";
-            
-
- String fileInputPath = pInput;
- String fileOutputPath = pOutput;
-
- String tParam = "-Tjpg";
- String tOParam = "-o";
-
- String[] cmd = new String[5];
- cmd[0] = dotPath;
- cmd[1] = tParam;
- cmd[2] = fileInputPath;
- cmd[3] = tOParam;
- cmd[4] = fileOutputPath;
-
- Runtime rt = Runtime.getRuntime();
-
- rt.exec(cmd);
-
- } catch (Exception ex) {
- ex.printStackTrace();
- } finally {
- }
- try {
-
- String[] cmd = new String[4];
- cmd[0] = "cmd";
- cmd[1] = "/C";
- cmd[2] = "start";
- cmd[3] = pOutput;
-
- Runtime rt = Runtime.getRuntime();
-
- rt.exec(cmd);
-
- } catch (Exception e) {
- }
- }
-
- */

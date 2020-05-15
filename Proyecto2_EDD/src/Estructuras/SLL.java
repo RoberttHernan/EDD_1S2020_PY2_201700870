@@ -1,8 +1,7 @@
 package Estructuras;
 
 import PaquetesEnvio.Estudiante;
-
-
+import PaquetesEnvio.PaqueteUsuario;
 
 /**
  *
@@ -21,6 +20,7 @@ public class SLL {
 
         if (root == null) {
             root = nuevo;
+
         } else {
             nuevo.setSig(root);
             root = nuevo;
@@ -41,9 +41,25 @@ public class SLL {
         return null;
     }
 
+    public boolean buscarBol(int carnet) {
+        NodeSLL aux = root;
+        if (isEmpty()) {
+            return false;
+        } else {
+            while (aux != null) {
+                if (aux.getEstudiante().getCarnet() == carnet) {
+                    return true;
+                }
+                aux = aux.getSig();
+            }
+
+        }
+        return false;
+    }
+
     public void print() {
         if (root == null) {
-            System.out.println("La lista esta vacia");
+            //System.out.println("La lista esta vacia");
             return;
         }
 
@@ -57,5 +73,33 @@ public class SLL {
 
     public boolean isEmpty() {
         return root == null;
+    }
+
+    public void Borrar(int carnet) {
+        NodeSLL aux = root;
+
+        if (root.getEstudiante().getCarnet() == carnet) {
+            if (root.getSig() == null) {
+                root = null;
+            } else {
+                root = root.getSig();
+                aux.setSig(null);
+
+            }
+
+        } else {
+            while (aux != null) {
+                if (aux.getSig().getEstudiante().getCarnet() == carnet) {
+                    if (aux.getSig().getSig() == null) {
+                        aux.setSig(null);
+                    } else {
+                        aux.setSig(aux.getSig());
+                        aux.getSig().setSig(null);
+                    }
+
+                }
+                aux = aux.getSig();
+            }
+        }
     }
 }
