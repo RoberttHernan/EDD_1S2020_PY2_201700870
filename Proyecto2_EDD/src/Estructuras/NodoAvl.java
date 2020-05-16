@@ -14,11 +14,16 @@ public class NodoAvl {
     private int altura;
     private String categoria;
     private NodoAvl izquierda, derecha;
+    
+    
+    private static int correlativo = 1;
+     private final int id;
 
     public NodoAvl(String categoria) {
-        this.valor = new BTree(2);
+        this.valor = new BTree(3);
         this.altura = 1;
         this.categoria = categoria;
+        this.id = correlativo++;
     }
 
     public BTree getValor() {
@@ -73,17 +78,17 @@ public class NodoAvl {
 
         String etiqueta;
         if (izquierda == null && derecha == null) {
-            etiqueta = "nodo" + hashCode() + " [ label =\"" + categoria + "\"];\n";
+            etiqueta = "nodo" + id + " [ label =\"" + categoria +valor.getNoClaves()+ "\"];\n";
         } else {
-            etiqueta = "nodo" + hashCode() + " [ label =\"<C0>|" + categoria + "|<C1>\"];\n";
+            etiqueta = "nodo" + id + " [ label =\"<C0>|" + categoria+valor.getNoClaves() + "|<C1>\"];\n";
         }
         if(izquierda!=null){
             etiqueta+= izquierda.getCodigoInterno() +
-               "nodo"+hashCode()+":C0->nodo"+izquierda.hashCode()+"\n";
+               "nodo"+id+":C0->nodo"+izquierda.id+"\n";
         }
         if(derecha!=null){
-            etiqueta=etiqueta + derecha.getCodigoInterno() +
-               "nodo"+hashCode()+":C1->nodo"+derecha.hashCode()+"\n";                    
+            etiqueta+= derecha.getCodigoInterno() +
+               "nodo"+id+":C1->nodo"+derecha.id+"\n";                    
         }
         return etiqueta;
     }
@@ -108,7 +113,7 @@ public class NodoAvl {
            } 
         } try{
           Runtime rt = Runtime.getRuntime();
-          rt.exec( "dot -Tjpg -o "+path+" Avl_grafico.dot");
+          rt.exec( "dot -Tjpg -o "+path+"Avl_grafico.dot");
           //Esperamos medio segundo para dar tiempo a que la imagen se genere.
           //Para que no sucedan errores en caso de que se decidan graficar varios
           //árboles sucesivamente.

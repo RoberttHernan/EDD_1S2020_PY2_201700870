@@ -102,4 +102,34 @@ public class SLL {
             }
         }
     }
+
+    public String textoGraphviz1() {
+        NodeSLL aux = root;
+        String texto = "";
+
+        while (aux != null) {
+            texto += "node" + aux.hashCode() + "[ label = \"" + aux.getEstudiante().getNombre() + "|" + aux.getEstudiante().getCarnet() + "\"];\n";
+            aux = aux.getSig();
+        }
+        return texto;
+    }
+
+    public String textoGraphviz2() {
+
+        NodeSLL aux = root;
+        String texto = "";
+
+        while (aux != null) {
+
+            if (aux.getSig() == null) {
+                texto += "->node" + aux.hashCode() + ";\n";
+            } else {
+                texto +="node" + aux.hashCode()+"->";
+            }
+            aux = aux.getSig();
+        }
+
+        return texto;
+    }
+
 }

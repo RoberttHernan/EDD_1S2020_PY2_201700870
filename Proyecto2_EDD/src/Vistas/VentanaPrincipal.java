@@ -6,8 +6,11 @@
 package Vistas;
 
 import Conexion.Servidor;
+import Estructuras.ArbolAvl;
+import Estructuras.NodoAvl;
 import Estructuras.TablaHash;
 import PaquetesEnvio.Estudiante;
+import PaquetesEnvio.Libro;
 import PaquetesEnvio.PaqueteUsuario;
 
 import com.google.gson.JsonArray;
@@ -43,7 +46,8 @@ import javax.xml.bind.ParseConversionEvent;
  */
 public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
 
-    private TablaHash tabla = new TablaHash(45);
+     TablaHash tabla = new TablaHash(45);
+     ArbolAvl arbolAvl;
 
 
     Ventana_ConfiguracionPuerto Ventanaconfiguracion = new Ventana_ConfiguracionPuerto(this, true);
@@ -56,6 +60,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
 
         initComponents();
         this.setLocationRelativeTo(null);
+        arbolAvl = new ArbolAvl();
         miHilo.start();
 
     }
@@ -77,17 +82,31 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenu3 = new javax.swing.JMenu();
         jLabel1 = new javax.swing.JLabel();
         jLabelMostrarPuerto = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenu4 = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
+
+        jMenu3.setText("jMenu3");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vistas/Imagenes/LogoProyecto.PNG"))); // NOI18N
+
+        jButton1.setText("Grafica");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("Carga Masiva");
 
@@ -113,20 +132,40 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
 
         jMenuBar1.add(jMenu2);
 
+        jMenu4.setText("Reportes");
+
+        jMenuItem3.setText("Reporte Usuarios");
+        jMenu4.add(jMenuItem3);
+
+        jMenuItem4.setText("Reporte Categorias (AVL)");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem4);
+
+        jMenuBar1.add(jMenu4);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(35, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(356, Short.MAX_VALUE)
                 .addComponent(jLabelMostrarPuerto)
                 .addGap(81, 81, 81))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(175, 175, 175)
+                        .addComponent(jButton1)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -135,7 +174,9 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
                 .addComponent(jLabelMostrarPuerto)
                 .addGap(9, 9, 9)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(77, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton1)
+                .addContainerGap(43, Short.MAX_VALUE))
         );
 
         pack();
@@ -189,6 +230,19 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
         Ventanaconfiguracion.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+       if (arbolAvl.getRaiz()!=null){
+       arbolAvl.graficar("graficas//Avl_grafico.jpg");
+           doDot("graficas//Avl_grafico.dot", "graficas//Avl_grafico.jpg");
+       }
+       
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -226,13 +280,18 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelMostrarPuerto;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     // End of variables declaration//GEN-END:variables
 
     public static String getMd5(String input) {
@@ -267,7 +326,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
             int Carnet;
             String password;
             String respuesta;
-
+            int i = 0;
             PaqueteUsuario user;
 
             while (true) { 
@@ -303,6 +362,14 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
                     tabla.Eliminar(aux.getCarnet());
                     }
                 }
+                if (tipo==4){
+                Libro libro = (Libro) flujo_entrada.readObject();
+                if (libro!= null){
+                    InsertarLibroEnAvl(libro);
+                }
+                
+                    
+                }
 
                 misocket.close();
             }
@@ -328,4 +395,56 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
         this.jLabelMostrarPuerto = jLabelMostrarPuerto;
     }
 
+   private void InsertarLibroEnAvl(Libro libro){
+      
+       arbolAvl.Add(libro.getCategoria());
+       NodoAvl aux = arbolAvl.search(libro.getCategoria());
+       aux.getValor().insert(libro);
+       
+    
+    }
+   
+   static void doDot(String pInput, String pOutput) {
+        try {
+
+            String dotPath
+                    = "C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe";
+            
+
+            String fileInputPath = pInput;
+            String fileOutputPath = pOutput;
+
+            String tParam = "-Tjpg";
+            String tOParam = "-o";
+
+            String[] cmd = new String[5];
+            cmd[0] = dotPath;
+            cmd[1] = tParam;
+            cmd[2] = fileInputPath;
+            cmd[3] = tOParam;
+            cmd[4] = fileOutputPath;
+
+            Runtime rt = Runtime.getRuntime();
+
+            rt.exec(cmd);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+        }
+        try {
+
+            String[] cmd = new String[4];
+            cmd[0] = "cmd";
+            cmd[1] = "/C";
+            cmd[2] = "start";
+            cmd[3] = pOutput;
+
+            Runtime rt = Runtime.getRuntime();
+
+            rt.exec(cmd);
+
+        } catch (Exception e) {
+        }
+    } 
 }

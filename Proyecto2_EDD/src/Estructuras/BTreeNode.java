@@ -1,6 +1,7 @@
 package Estructuras;
 
-import Otras_Clases.Libro;
+import PaquetesEnvio.Libro;
+
 
 /**
  *
@@ -17,8 +18,8 @@ public class BTreeNode {
     public BTreeNode(int t, boolean leaf) {
         this.t = t;
         this.leaf = leaf;
-        keys = new Libro[2*t-1];
-        C = new BTreeNode[2*t];
+        keys = new Libro[2 * t - 1];
+        C = new BTreeNode[2 * t];
         n = 0;
     }
 
@@ -36,19 +37,22 @@ public class BTreeNode {
 
     }
 
-    public BTreeNode search( Libro k) {
+    public BTreeNode search(Libro k) {
         int i = 0;
-        while (i < n && k.getIsbn() > keys[i].getIsbn()) {
+        while (i < n && (k.getIsbn() > keys[i].getIsbn())) 
             i++;
-            if (keys[i].getIsbn() == k.getIsbn()) {
-                return this;
-            }
-            if (leaf == true) {
-                return null;
-            }
+        
 
+        if (keys[i].getIsbn() == k.getIsbn()) {
+            return this;
         }
-        return C[i].search(k);
+
+        if (leaf == true) {
+            return null;
+        }
+       
+        
+         return C[i].search(k);
     }
 
     public void splitChild(int i, BTreeNode y) {
@@ -63,9 +67,10 @@ public class BTreeNode {
         // copiando los pasados t hijos de y a z
         if (y.isLeaf() == false) {
             for (int j = 0; j < t; j++) {
-                z.getC()[j] = y.getC()[j + t];
+                z.getC()[j] = y.getC()[j+t];
             }
         }
+        
         // reducir el numero de claves en y 
         y.setN(t - 1);
 
@@ -116,9 +121,9 @@ public class BTreeNode {
             if (C[i + 1].getN() == 2 * t - 1) {
 
                 // ve si el hijo esta lleno, entonces lo splitea
-                splitChild(i+1, C[i + 1]);
+                splitChild(i + 1, C[i + 1]);
 
-            // Luego de splitear, la llave media de C[i] va arriba y 
+                // Luego de splitear, la llave media de C[i] va arriba y 
                 // C[i] is splitteada en dos. ve cual de las dos va a tener la nueva llave
                 if (keys[i + 1].getIsbn() < k.getIsbn()) {
                     i++;
@@ -171,35 +176,35 @@ public class BTreeNode {
     public void setLeaf(boolean leaf) {
         this.leaf = leaf;
     }
-    
-    
-    
-    public String getDotName(){
-    return "Nodo" + this.hashCode();
+
+    public String getDotName() {
+        return "Nodo" + this.hashCode();
     }
-    
-    public String toDot(  )  {
-        
+
+    public String toDot() {
+
         StringBuilder b = new StringBuilder();
-        
-        b.append( getDotName() );
+
+        b.append(getDotName());
         b.append("[label=\"<P0>");
-        for( int i = 0; i < n; i++ ) {
+        for (int i = 0; i < n; i++) {
             b.append("|").append(keys[i].getTitulo());
-            b.append("|<P").append(i+1).append(">");                
+            b.append("|<P").append(i + 1).append(">");
         }
-        
+
         b.append("\"];\n");
-        
-        for( int i = 0; i <= n ; i++ ) {
-            if( C[i] != null )   {
-                b.append( C[i].toDot() );
+
+        for (int i = 0; i <= n; i++) {
+            if (C[i] != null) {
+                b.append(C[i].toDot());
                 b.append(getDotName()).append(":P").append(i).append(" -> ").append(C[i].getDotName()).append(";\n");
             }
         }
-        
+
         return b.toString();
-        
+
     }
+    
+    
 
 }

@@ -6,7 +6,18 @@
 package Vistas;
 
 import PaquetesEnvio.Estudiante;
+import PaquetesEnvio.Libro;
+import PaquetesEnvio.PaqueteUsuario;
+import static Vistas.VentanaPrincipalCliente.estudiante;
+import static Vistas.VentanaPrincipalCliente.puerto;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -14,7 +25,9 @@ import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.print.event.PrintJobEvent;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -31,6 +44,7 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
+
     }
 
     /**
@@ -42,15 +56,20 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuItem4 = new javax.swing.JMenuItem();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        jMenuItem5 = new javax.swing.JMenuItem();
+
+        jMenuItem4.setText("jMenuItem4");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -59,6 +78,13 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
         jButton2.setText("Eliminar Libro");
 
         jButton3.setText("Ver Libros");
+
+        jButton4.setText("jButton4");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("Opciones");
 
@@ -81,10 +107,15 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
         });
         jMenu1.add(jMenuItem3);
 
-        jMenuBar1.add(jMenu1);
+        jMenuItem5.setText("Carga Masiva");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem5);
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
+        jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
 
@@ -93,32 +124,43 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
-                .addComponent(jButton1)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(129, 129, 129))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(21, 21, 21))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton4))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(86, 86, 86)
+                        .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                        .addGap(51, 51, 51)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(44, 44, 44))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(167, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
                     .addComponent(jButton2)
                     .addComponent(jButton3))
-                .addGap(89, 89, 89))
+                .addGap(31, 31, 31)
+                .addComponent(jButton1)
+                .addGap(69, 69, 69)
+                .addComponent(jButton4)
+                .addGap(34, 34, 34))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-
-        editarUsuario.setVisible(true);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         int input = JOptionPane.showConfirmDialog(null, "¿Realmente desea eliminar su usuario?");
@@ -127,18 +169,16 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
             try {
                 InetAddress address = InetAddress.getLocalHost();
                 Socket miSocket = new Socket(address, VentanaPrincipalCliente.puerto);
-                
+
                 Estudiante aux = VentanaPrincipalCliente.estudiante;
-                
-                
+
                 ObjectOutputStream flujo_Salida = new ObjectOutputStream(miSocket.getOutputStream());
                 flujo_Salida.writeByte(3);
                 flujo_Salida.writeObject(aux);
                 flujo_Salida.flush();
-                
+
                 this.setVisible(false);
-                
-                
+
             } catch (UnknownHostException ex) {
                 Logger.getLogger(VentanaSecunciariaCliente.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
@@ -147,6 +187,74 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
 
         }
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+
+        editarUsuario.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+
+        try {
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Json", "json");
+        fileChooser.setFileFilter(filter);
+        int seleccion = fileChooser.showDialog(jLabel1, null);
+        JsonParser parser = new JsonParser();
+        
+        
+         
+        
+        
+        
+            FileReader fr = new FileReader(fileChooser.getSelectedFile());
+
+            JsonObject gsonObj = parser.parse(fr).getAsJsonObject();
+
+            JsonArray libros = gsonObj.get("libros").getAsJsonArray();
+
+            for (JsonElement lib : libros) {
+                JsonObject g = lib.getAsJsonObject();
+               
+
+                int isbn = g.get("ISBN").getAsInt();
+                int anio = g.get("Año").getAsInt();
+                String idioma = g.get("Idioma").getAsString();
+                String titulo = g.get("Titulo").getAsString();
+                String editorial = g.get("Editorial").getAsString();
+                String autor = g.get("Autor").getAsString();
+                int edicion = g.get("Edicion").getAsInt();
+                String categoria = g.get("Categoria").getAsString();
+                Libro libro = new Libro(isbn, titulo, autor, editorial, anio, edicion, categoria, idioma, VentanaPrincipalCliente.estudiante.getCarnet());
+                
+                InetAddress address = InetAddress.getLocalHost();
+                Socket miSocket = new Socket(address, 5050);
+                ObjectOutputStream flujoSalida = new ObjectOutputStream(miSocket.getOutputStream());
+                flujoSalida.writeByte(4);
+                flujoSalida.writeObject(libro);
+             
+                
+                  miSocket.close();
+            
+            }
+            
+          
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(VentanaSecunciariaCliente.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(VentanaSecunciariaCliente.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaSecunciariaCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+
+
+           
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -162,16 +270,21 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VentanaSecunciariaCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaSecunciariaCliente.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VentanaSecunciariaCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaSecunciariaCliente.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VentanaSecunciariaCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaSecunciariaCliente.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VentanaSecunciariaCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaSecunciariaCliente.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -194,11 +307,14 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
     // End of variables declaration//GEN-END:variables
 }

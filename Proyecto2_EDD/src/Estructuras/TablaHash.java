@@ -48,11 +48,11 @@ public class TablaHash {
     public void print() {
         int i = 0;
         while (i <= elementos.length - 1) {
-            if (elementos[i]== null) {
+            if (elementos[i] == null) {
                 i++;
             } else {
-                
-               System.out.println("Casilla" + i);
+
+                System.out.println("Casilla" + i);
                 elementos[i].print();
                 i++;
             }
@@ -88,11 +88,38 @@ public class TablaHash {
 
     }
 
-    public void Eliminar (int carnet){
+    public void Eliminar(int carnet) {
         int casilla = funcionHash(carnet);
-        
-        
-        elementos[casilla-1].Borrar(carnet);
-    
+
+        elementos[casilla - 1].Borrar(carnet);
+
+    }
+
+    public String getCodigoInterno() {
+        String texto = "";
+        texto += "digraph { \n"
+                + " node [shape = rectangle]; \n"
+                + " rankdir=TB;\n";
+
+        for (int i = 0; i < 45; i++) {
+            texto += "node" + i + "[label= \"" + i + "\"];\n";
+        }
+
+        for (int i = 0; i < 45; i++) {
+            if (elementos[i] != null) {
+                texto += elementos[i].textoGraphviz1() + "\n";
+            }
+        }
+
+        for (int i = 0; i < 45; i++) {
+            if (elementos[i]!= null){
+            texto += "node" + i +"->"+ elementos[i].textoGraphviz2() + "\n";
+            }
+        }
+
+        texto += "}";
+
+        return texto;
+
     }
 }

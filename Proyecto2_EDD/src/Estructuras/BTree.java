@@ -1,6 +1,7 @@
 package Estructuras;
 
-import Otras_Clases.Libro;
+
+import PaquetesEnvio.Libro;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -12,10 +13,14 @@ public class BTree {
 
     BTreeNode root;
     int t; // grado minimo
+    private int NoClaves; 
+  
 
     public BTree(int t) {
         this.root = null;
         this.t = t;
+        this.NoClaves = 0;
+        
     }
 
     public void traverse() {
@@ -25,10 +30,7 @@ public class BTree {
     }
 
     public BTreeNode search(Libro k) {
-        if (root == null) {
-            return null;
-        }
-        return root.search(k);
+      return (root ==null )?null : root.search(k);
     }
 
     public void insert(Libro k) {
@@ -38,7 +40,8 @@ public class BTree {
             root.setN(1);
         } else {// si el arbol no esta vacio
             //si el arbol esta lleno, entonces el arbol crece en altura
-            if (root.getN() == 2 * t - 1) {
+            
+            if (root.getN() == 2*t-1) {
                 BTreeNode s = new BTreeNode(t, false);
                 s.getC()[0] = root;
 
@@ -60,8 +63,11 @@ public class BTree {
                 root.insertNonFull(k);
             }
         }
+        NoClaves++;
+        
 
     }
+    
 
     //Getters y setters
     public BTreeNode getRoot() {
@@ -80,6 +86,15 @@ public class BTree {
         this.t = t;
     }
 
+    public int getNoClaves() {
+        return NoClaves;
+    }
+
+    public void setNoClaves(int NoClaves) {
+        this.NoClaves = NoClaves;
+    }
+
+    
     public String toDot() {
         StringBuilder b = new StringBuilder();
 
@@ -92,7 +107,7 @@ public class BTree {
         return b.toString();
     }
 
-     static void doDot(String pInput, String pOutput) {
+    static void doDot(String pInput, String pOutput) {
         try {
 
             String dotPath
@@ -134,21 +149,16 @@ public class BTree {
         } catch (Exception e) {
         }
     }
-     
-     public void graficar(String pInput, String pOutput) throws IOException {
+
+    public void graficar(String pInput, String pOutput) throws IOException {
         FileWriter f = new FileWriter("graficas//arbolB.dot");
 
         f.write(toDot());
-         f.close();
-         doDot(pInput, pOutput);
+        f.close();
+        doDot(pInput, pOutput);
     }
-  
-
-   
+    
+    
+    
 
 }
-
-
-
-
-

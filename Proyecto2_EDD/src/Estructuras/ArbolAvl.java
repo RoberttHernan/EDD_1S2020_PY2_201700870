@@ -10,7 +10,7 @@ public class ArbolAvl {
     private NodoAvl raiz;
     boolean opcion = false;
 
-     int altura(NodoAvl N) {
+    int altura(NodoAvl N) {
         if (N == null) {
             return 0;
 
@@ -67,13 +67,13 @@ public class ArbolAvl {
 
     }
 
-    private NodoAvl insert(NodoAvl nodo, String clave) {
+   private NodoAvl insert(NodoAvl nodo, String clave) {
         if (nodo == null) {
             return (new NodoAvl(clave));
 
         }
         if (clave.compareTo(nodo.getCategoria()) < 0) {
-            nodo.setIzquierda(insert(nodo.getDerecha(), clave));
+            nodo.setIzquierda(insert(nodo.getIzquierda(), clave));
         } else if (clave.compareTo(nodo.getCategoria()) > 0) {
             nodo.setDerecha(insert(nodo.getDerecha(), clave));
         } else {
@@ -119,8 +119,7 @@ public class ArbolAvl {
             raiz.setIzquierda(borrar(raiz.getIzquierda(), categoria));
         } else if (categoria.compareTo(raiz.getCategoria()) > 0) {
             raiz.setDerecha(borrar(raiz.getDerecha(), categoria));
-        } 
-        else {
+        } else {
             if (raiz.getDerecha() == null || raiz.getIzquierda() == null) {
                 NodoAvl temp = null;
                 if (temp == raiz.getIzquierda()) {
@@ -187,37 +186,35 @@ public class ArbolAvl {
     public void setRaiz(NodoAvl raiz) {
         this.raiz = raiz;
     }
-    
-    public void graficar(String path){
-    raiz.graficar(path);
-    }
-    public boolean EstaVacio(){
-     return raiz== null;
-    }
-  
 
- private NodoAvl buscar (NodoAvl nodo, String Categoria){
-        if (nodo == null){
-        return null;
-        }
-        if (Categoria.equals(nodo.getCategoria())){
-        return nodo;
-        }
-        
-        return Categoria.compareTo(nodo.getCategoria())<    0
-                ?buscar(nodo.getIzquierda(), Categoria)
-                :buscar(nodo.getDerecha(), Categoria);
-        
+    public void graficar(String path) {
+        raiz.graficar(path);
     }
-  
-  public NodoAvl search (String categoria){
-  return buscar(raiz, categoria);
-  }
-  public void Add (String categoria){
-  raiz = insert(raiz, categoria);
-  }
-   
-  
-    
+
+    public boolean EstaVacio() {
+        return raiz == null;
+    }
+
+    private NodoAvl buscar(NodoAvl nodo, String Categoria) {
+        if (nodo == null) {
+            return null;
+        }
+        if (Categoria.equals(nodo.getCategoria())) {
+            return nodo;
+        }
+
+        return Categoria.compareTo(nodo.getCategoria()) < 0
+                ? buscar(nodo.getIzquierda(), Categoria)
+                : buscar(nodo.getDerecha(), Categoria);
+
+    }
+
+    public NodoAvl search(String categoria) {
+        return buscar(raiz, categoria);
+    }
+
+    public void Add(String categoria) {
+        raiz = insert(raiz, categoria);
+    }
 
 }
