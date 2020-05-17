@@ -122,7 +122,7 @@ public class SLL {
         while (aux != null) {
 
             if (aux.getSig() == null) {
-                texto += "->node" + aux.hashCode() + ";\n";
+                texto += "node" + aux.hashCode() + ";\n";
             } else {
                 texto +="node" + aux.hashCode()+"->";
             }

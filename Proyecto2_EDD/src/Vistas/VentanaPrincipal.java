@@ -46,9 +46,8 @@ import javax.xml.bind.ParseConversionEvent;
  */
 public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
 
-     TablaHash tabla = new TablaHash(45);
-     ArbolAvl arbolAvl;
-
+    TablaHash tabla = new TablaHash(45);
+    ArbolAvl arbolAvl;
 
     Ventana_ConfiguracionPuerto Ventanaconfiguracion = new Ventana_ConfiguracionPuerto(this, true);
 
@@ -92,7 +91,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
         jMenu2 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        ReporteUsuariosBoton = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
 
         jMenu3.setText("jMenu3");
@@ -134,8 +133,13 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
 
         jMenu4.setText("Reportes");
 
-        jMenuItem3.setText("Reporte Usuarios");
-        jMenu4.add(jMenuItem3);
+        ReporteUsuariosBoton.setText("Reporte Usuarios");
+        ReporteUsuariosBoton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ReporteUsuariosBotonActionPerformed(evt);
+            }
+        });
+        jMenu4.add(ReporteUsuariosBoton);
 
         jMenuItem4.setText("Reporte Categorias (AVL)");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
@@ -232,16 +236,23 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-       if (arbolAvl.getRaiz()!=null){
-       arbolAvl.graficar("graficas//Avl_grafico.jpg");
-           doDot("graficas//Avl_grafico.dot", "graficas//Avl_grafico.jpg");
-       }
-       
+        if (arbolAvl.getRaiz() != null) {
+            arbolAvl.graficar("graficas//Avl_grafico.jpg");
+            doDot("graficas//Avl_grafico.dot", "graficas//Avl_grafico.jpg");
+        }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void ReporteUsuariosBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ReporteUsuariosBotonActionPerformed
+
+        tabla.graficar("graficas//Tabla_Grafico.jpg");
+        doDot("graficas//Tabla_Grafico.dot", "graficas//Tabla_Grafico.jpg");
+
+    }//GEN-LAST:event_ReporteUsuariosBotonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -280,6 +291,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem ReporteUsuariosBoton;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelMostrarPuerto;
@@ -290,7 +302,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     // End of variables declaration//GEN-END:variables
 
@@ -329,7 +340,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
             int i = 0;
             PaqueteUsuario user;
 
-            while (true) { 
+            while (true) {
                 Socket misocket = servidor.accept();
                 ObjectInputStream flujo_entrada = new ObjectInputStream(misocket.getInputStream());
 
@@ -348,34 +359,45 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
                 }
                 if (tipo == 2) {
                     Estudiante aux = (Estudiante) flujo_entrada.readObject();
-                    if (aux!= null){
-                    tabla.EditarEstudiante(aux);
-                    tabla.buscar(aux.getCarnet());
-                     ObjectOutputStream flujo_salida = new ObjectOutputStream(misocket.getOutputStream());
-                     flujo_salida.writeObject(aux);
-                     flujo_salida.flush();
+                    if (aux != null) {
+                        tabla.EditarEstudiante(aux);
+                        tabla.buscar(aux.getCarnet());
+                        ObjectOutputStream flujo_salida = new ObjectOutputStream(misocket.getOutputStream());
+                        flujo_salida.writeObject(aux);
+                        flujo_salida.flush();
                     }
                 }
-                if (tipo == 3){
+                if (tipo == 3) {
                     Estudiante aux = (Estudiante) flujo_entrada.readObject();
-                    if ( aux!=null){
-                    tabla.Eliminar(aux.getCarnet());
+                    if (aux != null) {
+                        tabla.Eliminar(aux.getCarnet());
                     }
                 }
-                if (tipo==4){
-                Libro libro = (Libro) flujo_entrada.readObject();
-                if (libro!= null){
-                    InsertarLibroEnAvl(libro);
+                if (tipo == 4) {
+                    Libro libro = (Libro) flujo_entrada.readObject();
+                    if (libro != null) {
+                        InsertarLibroEnAvl(libro);
+                    }
                 }
-                
+
+                if (tipo == 5) {
+                    Estudiante aux = (Estudiante) flujo_entrada.readObject();
+                    DataOutputStream flujoSalida = new DataOutputStream(misocket.getOutputStream());
+                    if (tabla.buscar(aux.getCarnet())!= null){  
+                        flujoSalida.writeUTF("Usuario ya registrado");                       
+                    }
+                    else {
+                    tabla.insert(aux);
+                    flujoSalida.writeUTF("Registro correcto");
                     
+                    }
                 }
 
                 misocket.close();
             }
         } catch (IOException | ClassNotFoundException ex) {
-           // Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(rootPane, "Error "+ ex);
+            // Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(rootPane, "Error " + ex);
         }
     }
 
@@ -395,21 +417,19 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
         this.jLabelMostrarPuerto = jLabelMostrarPuerto;
     }
 
-   private void InsertarLibroEnAvl(Libro libro){
-      
-       arbolAvl.Add(libro.getCategoria());
-       NodoAvl aux = arbolAvl.search(libro.getCategoria());
-       aux.getValor().insert(libro);
-       
-    
+    private void InsertarLibroEnAvl(Libro libro) {
+
+        arbolAvl.Add(libro.getCategoria());
+        NodoAvl aux = arbolAvl.search(libro.getCategoria());
+        aux.getValor().insert(libro);
+
     }
-   
-   static void doDot(String pInput, String pOutput) {
+
+    static void doDot(String pInput, String pOutput) {
         try {
 
             String dotPath
                     = "C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe";
-            
 
             String fileInputPath = pInput;
             String fileOutputPath = pOutput;
@@ -446,5 +466,5 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
 
         } catch (Exception e) {
         }
-    } 
+    }
 }

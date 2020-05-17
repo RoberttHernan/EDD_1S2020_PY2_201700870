@@ -67,7 +67,7 @@ public class ArbolAvl {
 
     }
 
-   private NodoAvl insert(NodoAvl nodo, String clave) {
+    private NodoAvl insert(NodoAvl nodo, String clave) {
         if (nodo == null) {
             return (new NodoAvl(clave));
 

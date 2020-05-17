@@ -130,7 +130,7 @@ public class EditarUsuario extends javax.swing.JDialog {
         
            try {
                InetAddress address = InetAddress.getLocalHost();
-               Socket miSocket = new Socket("192.168.1.1", VentanaPrincipalCliente.puerto);
+               Socket miSocket = new Socket(address, VentanaPrincipalCliente.puerto);
                
                ObjectOutputStream flujo_salida = new ObjectOutputStream(miSocket.getOutputStream());
                flujo_salida.write(2);

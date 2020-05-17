@@ -27,7 +27,9 @@ import java.util.logging.Logger;
 import javax.print.event.PrintJobEvent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -36,14 +38,31 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class VentanaSecunciariaCliente extends javax.swing.JDialog {
 
     EditarUsuario editarUsuario = new EditarUsuario(null, rootPaneCheckingEnabled);
+    VentanaAgregarUsuario agregarUsuario = new VentanaAgregarUsuario(null, rootPaneCheckingEnabled);
+    DefaultTableModel modelo;
 
     /**
      * Creates new form VentanaSecunciariaCliente
      */
     public VentanaSecunciariaCliente(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+
         initComponents();
         this.setLocationRelativeTo(null);
+
+        modelo = new DefaultTableModel();
+        jTableLibros.setModel(modelo);
+        modelo.addColumn("ISBN");
+        modelo.addColumn("Titulo");
+        modelo.addColumn("Autor");
+        modelo.addColumn("Editorial");
+        modelo.addColumn("Año");
+        modelo.addColumn("Edicion");
+        modelo.addColumn("Categoria");
+        modelo.addColumn("Idioma");
+
+       
+        
 
     }
 
@@ -61,6 +80,8 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTableLibros = new javax.swing.JTable();
         jButton4 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -78,6 +99,16 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
         jButton2.setText("Eliminar Libro");
 
         jButton3.setText("Ver Libros");
+
+        jTableLibros.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane1.setViewportView(jTableLibros);
 
         jButton4.setText("jButton4");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -97,6 +128,11 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
         jMenu1.add(jMenuItem1);
 
         jMenuItem2.setText("Agregar Usuario");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem2);
 
         jMenuItem3.setText("Eliminar Usuario");
@@ -123,40 +159,42 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(129, 129, 129))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 717, Short.MAX_VALUE)
                         .addComponent(jLabel1)
-                        .addGap(21, 21, 21))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGap(21, 21, 21))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton4))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(86, 86, 86)
-                        .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
-                        .addGap(51, 51, 51)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(44, 44, 44))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton1)
+                                .addGap(32, 32, 32)
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(38, 38, 38)
+                                .addComponent(jButton4))
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(jScrollPane1)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton3)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
                     .addComponent(jButton2)
-                    .addComponent(jButton3))
-                .addGap(31, 31, 31)
-                .addComponent(jButton1)
-                .addGap(69, 69, 69)
-                .addComponent(jButton4)
-                .addGap(34, 34, 34))
+                    .addComponent(jButton4))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         pack();
@@ -196,17 +234,12 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
 
         try {
-        JFileChooser fileChooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Json", "json");
-        fileChooser.setFileFilter(filter);
-        int seleccion = fileChooser.showDialog(jLabel1, null);
-        JsonParser parser = new JsonParser();
-        
-        
-         
-        
-        
-        
+            JFileChooser fileChooser = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Json", "json");
+            fileChooser.setFileFilter(filter);
+            int seleccion = fileChooser.showDialog(jLabel1, null);
+            JsonParser parser = new JsonParser();
+
             FileReader fr = new FileReader(fileChooser.getSelectedFile());
 
             JsonObject gsonObj = parser.parse(fr).getAsJsonObject();
@@ -215,7 +248,6 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
 
             for (JsonElement lib : libros) {
                 JsonObject g = lib.getAsJsonObject();
-               
 
                 int isbn = g.get("ISBN").getAsInt();
                 int anio = g.get("Año").getAsInt();
@@ -226,19 +258,17 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
                 int edicion = g.get("Edicion").getAsInt();
                 String categoria = g.get("Categoria").getAsString();
                 Libro libro = new Libro(isbn, titulo, autor, editorial, anio, edicion, categoria, idioma, VentanaPrincipalCliente.estudiante.getCarnet());
-                
+
                 InetAddress address = InetAddress.getLocalHost();
                 Socket miSocket = new Socket(address, 5050);
                 ObjectOutputStream flujoSalida = new ObjectOutputStream(miSocket.getOutputStream());
                 flujoSalida.writeByte(4);
                 flujoSalida.writeObject(libro);
-             
-                
-                  miSocket.close();
-            
+
+                miSocket.close();
+
             }
-            
-          
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(VentanaSecunciariaCliente.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnknownHostException ex) {
@@ -250,10 +280,21 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
 
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        agregarUsuario.setVisible(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        Object[] fila = new Object[2];
+        fila[0] = "columna 1";
+        fila[1] = "columna 3";
+        modelo.addRow(fila);
+        
+        Object[] filados = new Object[2];
+        fila[0] = "columna 3";
+        fila[1] = "columna 4";
+        modelo.addRow(fila);
 
-
-           
     }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
@@ -316,5 +357,7 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTableLibros;
     // End of variables declaration//GEN-END:variables
 }

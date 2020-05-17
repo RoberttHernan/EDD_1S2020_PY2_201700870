@@ -1,6 +1,9 @@
 package Estructuras;
 
 import PaquetesEnvio.Estudiante;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  *
@@ -18,7 +21,6 @@ public class TablaHash {
 
     public void insert(Estudiante estudiante) {
         if (buscar(estudiante.getCarnet()) != null) {
-            System.out.println("Carnet: " + estudiante.getCarnet() + " Ya registrado");
         } else {
             int casilla = funcionHash(estudiante.getCarnet());
             if (casilla <= 45) {
@@ -95,7 +97,7 @@ public class TablaHash {
 
     }
 
-    public String getCodigoInterno() {
+    private String getCodigoInterno() {
         String texto = "";
         texto += "digraph { \n"
                 + " node [shape = rectangle]; \n"
@@ -112,8 +114,8 @@ public class TablaHash {
         }
 
         for (int i = 0; i < 45; i++) {
-            if (elementos[i]!= null){
-            texto += "node" + i +"->"+ elementos[i].textoGraphviz2() + "\n";
+            if (elementos[i] != null) {
+                texto += "node" + i+"->" + elementos[i].textoGraphviz2() + "\n";
             }
         }
 
@@ -122,4 +124,36 @@ public class TablaHash {
         return texto;
 
     }
+
+    public void graficar(String path) {
+        FileWriter fichero = null;
+        PrintWriter escritor;
+
+        try {
+            fichero = new FileWriter("graficas//Tabla_Grafico.dot");
+            escritor = new PrintWriter(fichero);
+            escritor.print(getCodigoInterno());
+        } catch (Exception e) {
+            System.err.println("Error al escribir el archivo Tabla_Grafico.dot");
+        } finally {
+            try {
+                if (null != fichero) {
+                    fichero.close();
+                }
+            } catch (Exception e2) {
+                System.err.println("Error al cerrar el archivo Tabla_Grafico.dot");
+            }
+        }
+        try {
+            Runtime rt = Runtime.getRuntime();
+            rt.exec("dot -Tjpg -o " + path + "Tabla_Grafico.dot");
+          //Esperamos medio segundo para dar tiempo a que la imagen se genere.
+            //Para que no sucedan errores en caso de que se decidan graficar varios
+            //árboles sucesivamente.
+            Thread.sleep(500);
+        } catch (Exception ex) {
+            System.err.println("Error al generar la imagen para el archivo Tabla_Grafico.dot");
+        }
+    }
+
 }
