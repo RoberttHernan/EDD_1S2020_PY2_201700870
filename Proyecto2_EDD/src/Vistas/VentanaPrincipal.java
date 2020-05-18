@@ -5,7 +5,6 @@
  */
 package Vistas;
 
-import Conexion.Servidor;
 import Estructuras.ArbolAvl;
 import Estructuras.NodoAvl;
 import Estructuras.TablaHash;
@@ -17,7 +16,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.sun.corba.se.impl.io.OutputStreamHook;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.DataOutputStream;
@@ -25,7 +23,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.net.ServerSocket;
@@ -38,7 +35,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.xml.bind.ParseConversionEvent;
 
 /**
  *
@@ -208,7 +204,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
                 String apellido = g.get("Apellido").getAsString();
                 String carrera = g.get("Carrera").getAsString();
                 String pass = g.get("Password").getAsString();
-                System.out.println(pass);
                 Estudiante estudiante = new Estudiante(carnet, nombre, apellido, carrera, pass);
                 tabla.insert(estudiante);
 
@@ -217,7 +212,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
-        tabla.print();
 
 
     }//GEN-LAST:event_jMenuItem1ActionPerformed
@@ -236,15 +230,17 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
+        System.out.println(arbolAvl.retornaLibros());
+
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         if (arbolAvl.getRaiz() != null) {
             arbolAvl.graficar("graficas//Avl_grafico.jpg");
             doDot("graficas//Avl_grafico.dot", "graficas//Avl_grafico.jpg");
         }
 
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void ReporteUsuariosBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ReporteUsuariosBotonActionPerformed
@@ -375,21 +371,47 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
                 }
                 if (tipo == 4) {
                     Libro libro = (Libro) flujo_entrada.readObject();
-                    if (libro != null) {
-                        InsertarLibroEnAvl(libro);
-                    }
+                    Thread.sleep(50);
+                    InsertarLibroEnAvl(libro);
+                    
                 }
 
                 if (tipo == 5) {
                     Estudiante aux = (Estudiante) flujo_entrada.readObject();
                     DataOutputStream flujoSalida = new DataOutputStream(misocket.getOutputStream());
-                    if (tabla.buscar(aux.getCarnet())!= null){  
-                        flujoSalida.writeUTF("Usuario ya registrado");                       
+                    if (tabla.buscar(aux.getCarnet()) != null) {
+                        flujoSalida.writeUTF("Usuario ya registrado");
+                    } else {
+                        tabla.insert(aux);
+                        flujoSalida.writeUTF("Registro correcto");
+
                     }
-                    else {
-                    tabla.insert(aux);
-                    flujoSalida.writeUTF("Registro correcto");
-                    
+                }
+                if (tipo == 6) {
+                    String f = arbolAvl.retornaLibros();
+                    ObjectOutputStream flujoSalida = new ObjectOutputStream(misocket.getOutputStream());
+                    flujoSalida.writeObject(f);
+
+                }
+                if (tipo == 7) {
+                    Libro libro = (Libro) flujo_entrada.readObject();
+                    DataOutputStream flujoSalida = new DataOutputStream(misocket.getOutputStream());
+
+                    if (arbolAvl.search(libro.getCategoria()) != null) {
+                        NodoAvl aux = arbolAvl.search(libro.getCategoria());
+
+                        if (aux.getValor().search(libro) != null) {
+                            flujoSalida.writeUTF("Error libro ya registrado");
+                        }
+                        else {
+                        aux.getValor().insert(libro);
+                        flujoSalida.writeUTF("Libro Registrado correctamente");
+                        }
+                        
+
+                    } else {
+                        InsertarLibroEnAvl(libro);
+                        flujoSalida.writeUTF("Libro y categoria Registrados correctamente ");
                     }
                 }
 
@@ -398,6 +420,8 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
         } catch (IOException | ClassNotFoundException ex) {
             // Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(rootPane, "Error " + ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -419,9 +443,12 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
 
     private void InsertarLibroEnAvl(Libro libro) {
 
+        if (!arbolAvl.buscarIsbn(libro.getIsbn())){
         arbolAvl.Add(libro.getCategoria());
         NodoAvl aux = arbolAvl.search(libro.getCategoria());
         aux.getValor().insert(libro);
+        }
+        
 
     }
 

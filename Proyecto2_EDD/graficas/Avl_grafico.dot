@@ -1,23 +1,9 @@
 digraph grafica{
 rankdir=TB;
 node [shape = record, style=filled, fillcolor=seashell2];
-nodo2 [ label ="<C0>|Informativos19|<C1>"];
-nodo1 [ label ="<C0>|Consulta12|<C1>"];
-nodo3 [ label ="Biografia3"];
-nodo1:C0->nodo3
-nodo5 [ label ="<C0>|Ensayo12|<C1>"];
-nodo8 [ label ="Drama16"];
-nodo5:C0->nodo8
-nodo1:C1->nodo5
+nodo2 [ label ="<C0>|Ficcion1|<C1>"];
+nodo1 [ label ="Consulta2"];
 nodo2:C0->nodo1
-nodo6 [ label ="<C0>|Lírico13|<C1>"];
-nodo4 [ label ="Literatura9"];
-nodo6:C0->nodo4
-nodo10 [ label ="<C0>|Sagas2|<C1>"];
-nodo9 [ label ="Revista6"];
-nodo10:C0->nodo9
-nodo7 [ label ="Épico8"];
-nodo10:C1->nodo7
-nodo6:C1->nodo10
-nodo2:C1->nodo6
+nodo3 [ label ="Literatura1"];
+nodo2:C1->nodo3
 }

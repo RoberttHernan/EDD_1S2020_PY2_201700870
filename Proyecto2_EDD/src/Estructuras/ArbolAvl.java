@@ -217,4 +217,43 @@ public class ArbolAvl {
         raiz = insert(raiz, categoria);
     }
 
+    String aux;
+
+    private String textouno(NodoAvl nodo) {
+        if (nodo != null) {
+
+            aux += nodo.retornar() + "\n";
+            textouno(nodo.getIzquierda());
+            textouno(nodo.getDerecha());
+
+        }
+        return aux;
+    }
+
+    public String retornaLibros() {
+        aux = "";
+        return textouno(raiz);
+
+    }
+
+    boolean bandera = false;
+    private boolean buscarIS(NodoAvl nodo, int isbn) {
+
+        if (nodo != null) {
+            if (nodo.searchIsbn(isbn)) {
+                bandera = true;
+            }
+            buscarIS(nodo.getIzquierda(), isbn);
+            buscarIS(nodo.getDerecha(),isbn);
+
+        }
+        return bandera;
+    }
+    
+    public boolean buscarIsbn (int isbn){
+    return buscarIS(raiz, isbn);
+    }
+    
+   
+
 }

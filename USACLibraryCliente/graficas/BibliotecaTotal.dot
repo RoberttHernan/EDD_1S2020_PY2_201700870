@@ -1,0 +1,66 @@
+digraph G {
+ label = "
+Ficcion:
+ISBN : 10765
+Titulo: Canales de comercialización
+Autor: ESCOBAR, FRANCISCO
+Editorial: 3R EDITORES
+Año: 1999
+Edicion: 1
+Categoria: Ficcion
+Idioma: Ingles
+
+
+Consulta:
+ISBN : 10763
+Titulo: Curso de derecho constitucional
+Autor: ESCOBAR, DAVID
+Editorial: 3M España
+Año: 1891
+Edicion: 2
+Categoria: Consulta
+Idioma: Español
+
+ISBN : 10768
+Titulo: Planeación estratégica aplicada
+Autor: ESCOBAR, FRANCISCO ANDRÉS
+Editorial: A Lessons in Leadership Publications
+Año: 2001
+Edicion: 2
+Categoria: Consulta
+Idioma: Frances
+
+
+Drama:
+ISBN : 10815
+Titulo: Manual gestión de mantenimiento a la medida
+Autor: ESCUELA DE PLANIFICACIÓN ALFONSO ALVAREZ LEMUS
+Editorial: Abada
+Año: 1996
+Edicion: 1
+Categoria: Drama
+Idioma: Español
+
+ISBN : 10816
+Titulo: Manual de gestión de la calidad total a la medida
+Autor: ESCUELA MEXICANA DE ARQUITECTURA, UNIVERSIDAD LA SALLE
+Editorial: ABBEVILLE PRESS
+Año: 1995
+Edicion: 3
+Categoria: Drama
+Idioma: Español
+
+
+Literatura:
+ISBN : 10791
+Titulo: Historia de la etnología
+Autor: ESCOTT-STUMP
+Editorial: A. REDONDO
+Año: 1946
+Edicion: 4
+Categoria: Literatura
+Idioma: Español
+
+
+";
+}

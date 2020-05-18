@@ -14,7 +14,10 @@ public class BTreeNode {
     private BTreeNode[] C; // Array de hijos
     private int n; // numero actual de llaves
     private boolean leaf; // es verdadero cuando el nodo es un hijo
+    
 
+
+    
     public BTreeNode(int t, boolean leaf) {
         this.t = t;
         this.leaf = leaf;
@@ -205,6 +208,44 @@ public class BTreeNode {
 
     }
     
+ 
+    static String aux ;
+   private String retorna() {
+        
+         
+        int i;
+        for (i = 0; i < n; i++) {
+            if (leaf == false) {
+                C[i].retorna();
+            }
+            aux += keys[i]+"\n";
+        }
+        if (leaf == false) {
+            C[i].retorna();
+        }
+        return aux;
+    }
     
+    public String retornaTexto (){
+        aux = "";
+    return retorna();
+    }
+    
+    
+    public boolean searchISBN(int isbn) {
+        int i = 0;
+        while (i < n && (isbn > keys[i].getIsbn())) 
+            i++;
+        if (keys[i].getIsbn() == isbn) {
+            return true;
+        }
+
+        if (leaf == true) {
+            return false;
+        }
+       
+        
+         return C[i].searchISBN(isbn);
+    }
 
 }

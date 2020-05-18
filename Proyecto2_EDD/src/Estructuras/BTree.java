@@ -32,6 +32,14 @@ public class BTree {
     public BTreeNode search(Libro k) {
       return (root ==null )?null : root.search(k);
     }
+    
+    public boolean searchISBN(int isbn){
+    if (root == null){
+    return true;
+    }else {
+    return root.searchISBN(isbn);
+    }
+    }
 
     public void insert(Libro k) {
         if (root == null) {
@@ -159,6 +167,9 @@ public class BTree {
     }
     
     
-    
-
+    public String retorna (){
+        
+       return  root.retornaTexto();
+        
+    }
 }

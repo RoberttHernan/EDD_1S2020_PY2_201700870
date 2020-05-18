@@ -46,4 +46,21 @@ node41[label= "41"];
 node42[label= "42"];
 node43[label= "43"];
 node44[label= "44"];
+node729018449[ label = "Ricardo|201503476"];
+
+node1408992904[ label = "Juanito|201503477"];
+
+node1568292781[ label = "Enrique|201700825"];
+node2039460362[ label = "Robert|201700870"];
+
+node1296708626[ label = "Antoni|201700889"];
+
+node0->node729018449;
+
+node1->node1408992904;
+
+node24->node1568292781->node2039460362;
+
+node43->node1296708626;
+
 }
