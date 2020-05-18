@@ -8,6 +8,7 @@ package Vistas;
 import PaquetesEnvio.Libro;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -204,7 +205,7 @@ public class CrearLibro extends javax.swing.JDialog {
                 flujoSalida.writeByte(7);
                 flujoSalida.writeObject(libro);
                 
-                DataInputStream flujoEntrada = new DataInputStream(miSocket.getInputStream());
+                ObjectInputStream flujoEntrada = new ObjectInputStream(miSocket.getInputStream());
                 String mensaje = flujoEntrada.readUTF();
                 JOptionPane.showMessageDialog(rootPane, mensaje);
                 

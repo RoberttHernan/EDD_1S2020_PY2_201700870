@@ -240,12 +240,11 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
                 Libro libro = new Libro(isbn, titulo, autor, editorial, anio, edicion, categoria, idioma, VentanaPrincipalCliente.estudiante.getCarnet());
 
                 InetAddress address = InetAddress.getLocalHost();
-                Socket miSocket = new Socket(address, 5050);
-                ObjectOutputStream flujoSalida = new ObjectOutputStream(miSocket.getOutputStream());
-                flujoSalida.writeByte(4);
-                flujoSalida.writeObject(libro);
-
-                miSocket.close();
+                try (Socket miSocket = new Socket(address, VentanaPrincipalCliente.puerto)) {
+                    ObjectOutputStream flujoSalida = new ObjectOutputStream(miSocket.getOutputStream());
+                    flujoSalida.writeByte(4);
+                    flujoSalida.writeObject(libro);
+                }
 
             }
 

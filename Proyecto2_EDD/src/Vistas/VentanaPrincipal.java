@@ -80,7 +80,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
         jMenu3 = new javax.swing.JMenu();
         jLabel1 = new javax.swing.JLabel();
         jLabelMostrarPuerto = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -95,13 +94,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Vistas/Imagenes/LogoProyecto.PNG"))); // NOI18N
-
-        jButton1.setText("Grafica");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
 
         jMenu1.setText("Carga Masiva");
 
@@ -153,19 +145,14 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(35, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(356, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabelMostrarPuerto)
                 .addGap(81, 81, 81))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(175, 175, 175)
-                        .addComponent(jButton1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,9 +161,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
                 .addComponent(jLabelMostrarPuerto)
                 .addGap(9, 9, 9)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
 
         pack();
@@ -227,13 +212,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
         });
         Ventanaconfiguracion.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
-        System.out.println(arbolAvl.retornaLibros());
-
-
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         if (arbolAvl.getRaiz() != null) {
@@ -288,7 +266,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem ReporteUsuariosBoton;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelMostrarPuerto;
     private javax.swing.JMenu jMenu1;
@@ -371,9 +348,8 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
                 }
                 if (tipo == 4) {
                     Libro libro = (Libro) flujo_entrada.readObject();
-                    Thread.sleep(50);
                     InsertarLibroEnAvl(libro);
-                    
+
                 }
 
                 if (tipo == 5) {
@@ -396,23 +372,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
                 if (tipo == 7) {
                     Libro libro = (Libro) flujo_entrada.readObject();
                     DataOutputStream flujoSalida = new DataOutputStream(misocket.getOutputStream());
-
-                    if (arbolAvl.search(libro.getCategoria()) != null) {
-                        NodoAvl aux = arbolAvl.search(libro.getCategoria());
-
-                        if (aux.getValor().search(libro) != null) {
-                            flujoSalida.writeUTF("Error libro ya registrado");
-                        }
-                        else {
-                        aux.getValor().insert(libro);
-                        flujoSalida.writeUTF("Libro Registrado correctamente");
-                        }
-                        
-
-                    } else {
-                        InsertarLibroEnAvl(libro);
-                        flujoSalida.writeUTF("Libro y categoria Registrados correctamente ");
-                    }
+                    
                 }
 
                 misocket.close();
@@ -420,8 +380,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
         } catch (IOException | ClassNotFoundException ex) {
             // Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(rootPane, "Error " + ex);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -443,12 +401,9 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
 
     private void InsertarLibroEnAvl(Libro libro) {
 
-        if (!arbolAvl.buscarIsbn(libro.getIsbn())){
         arbolAvl.Add(libro.getCategoria());
         NodoAvl aux = arbolAvl.search(libro.getCategoria());
         aux.getValor().insert(libro);
-        }
-        
 
     }
 

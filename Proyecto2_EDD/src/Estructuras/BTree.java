@@ -1,6 +1,5 @@
 package Estructuras;
 
-
 import PaquetesEnvio.Libro;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,14 +12,13 @@ public class BTree {
 
     BTreeNode root;
     int t; // grado minimo
-    private int NoClaves; 
-  
+    private int NoClaves;
 
     public BTree(int t) {
         this.root = null;
         this.t = t;
         this.NoClaves = 0;
-        
+
     }
 
     public void traverse() {
@@ -30,15 +28,15 @@ public class BTree {
     }
 
     public BTreeNode search(Libro k) {
-      return (root ==null )?null : root.search(k);
+        return (root == null) ? null : root.search(k);
     }
-    
-    public boolean searchISBN(int isbn){
-    if (root == null){
-    return true;
-    }else {
-    return root.searchISBN(isbn);
-    }
+
+    public boolean searchISBN(int isbn) {
+        if (root == null) {
+            return true;
+        } else {
+            return root.searchISBN(isbn);
+        }
     }
 
     public void insert(Libro k) {
@@ -48,8 +46,8 @@ public class BTree {
             root.setN(1);
         } else {// si el arbol no esta vacio
             //si el arbol esta lleno, entonces el arbol crece en altura
-            
-            if (root.getN() == 2*t-1) {
+
+            if (root.getN() == 2 * t - 1) {
                 BTreeNode s = new BTreeNode(t, false);
                 s.getC()[0] = root;
 
@@ -72,10 +70,8 @@ public class BTree {
             }
         }
         NoClaves++;
-        
 
     }
-    
 
     //Getters y setters
     public BTreeNode getRoot() {
@@ -102,7 +98,6 @@ public class BTree {
         this.NoClaves = NoClaves;
     }
 
-    
     public String toDot() {
         StringBuilder b = new StringBuilder();
 
@@ -165,11 +160,29 @@ public class BTree {
         f.close();
         doDot(pInput, pOutput);
     }
-    
-    
-    public String retorna (){
-        
-       return  root.retornaTexto();
-        
+
+    public String retorna() {
+
+        return root.retornaTexto();
+
+    }
+
+    public void remove(int isbn) {
+        if (root == null) {
+
+        } else {
+
+            root.remove(isbn);
+        }
+
+        if (root.getN() == 0) {
+            BTreeNode temp = root;
+
+            if (root.isLeaf()) {
+                root = null;
+            } else {
+                root = root.getC()[0];
+            }
+        }
     }
 }
