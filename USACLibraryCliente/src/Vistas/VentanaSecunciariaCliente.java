@@ -7,33 +7,23 @@ package Vistas;
 
 import PaquetesEnvio.Estudiante;
 import PaquetesEnvio.Libro;
-import PaquetesEnvio.PaqueteUsuario;
-import static Vistas.VentanaPrincipalCliente.estudiante;
-import static Vistas.VentanaPrincipalCliente.puerto;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.print.event.PrintJobEvent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -71,6 +61,10 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        jTextISBN = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jTextFieldBuscarLibro = new javax.swing.JTextField();
+        jButtonBuscarLibro = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -90,6 +84,11 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
         });
 
         jButton2.setText("Eliminar Libro");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Ver Bibilioteca ");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -101,6 +100,15 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
+
+        jLabel2.setText("ISBN");
+
+        jButtonBuscarLibro.setText("Buscar");
+        jButtonBuscarLibro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBuscarLibroActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("Opciones");
 
@@ -153,25 +161,47 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
                         .addGap(21, 21, 21))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 524, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton1)
-                                .addGap(32, 32, 32)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 524, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton1))
+                                .addGap(33, 33, 33)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButtonBuscarLibro)
+                                    .addComponent(jTextFieldBuscarLibro, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel2)
+                                        .addComponent(jTextISBN, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton3)
+                            .addComponent(jTextISBN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(jButton2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jTextFieldBuscarLibro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(9, 9, 9)
+                        .addComponent(jButtonBuscarLibro)
+                        .addGap(45, 45, 45)))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -244,6 +274,8 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
                     ObjectOutputStream flujoSalida = new ObjectOutputStream(miSocket.getOutputStream());
                     flujoSalida.writeByte(4);
                     flujoSalida.writeObject(libro);
+
+                    miSocket.close();
                 }
 
             }
@@ -254,6 +286,8 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
             Logger.getLogger(VentanaSecunciariaCliente.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(VentanaSecunciariaCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (NullPointerException ex){
+        
         }
 
 
@@ -277,8 +311,6 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
             String texto = (String) flujoEntrada.readObject();
             jTextArea1.setText(texto);
 
-           
-
             miSocket.close();
         } catch (UnknownHostException ex) {
             Logger.getLogger(VentanaSecunciariaCliente.class.getName()).log(Level.SEVERE, null, ex);
@@ -293,8 +325,72 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         CrearLibro crearLibro = new CrearLibro(null, rootPaneCheckingEnabled);
         crearLibro.setVisible(true);
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        if (jTextISBN.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(rootPane, "ISBN vacio");
+        } else {
+
+            int n = JOptionPane.showConfirmDialog(rootPane, "¿Realmente desea eliminar este libro?");
+
+            if (n == 0) {
+                InetAddress address;
+                try {
+                    address = InetAddress.getLocalHost();
+                    Socket miSocket = new Socket(address, VentanaPrincipalCliente.puerto);
+                    ObjectOutputStream flujoSalida = new ObjectOutputStream(miSocket.getOutputStream());
+                    int isbn = Integer.parseInt(jTextISBN.getText());
+                    Libro aux = new Libro(isbn, null, null, null, 1, 2000, null, null, VentanaPrincipalCliente.estudiante.getCarnet());
+
+                    flujoSalida.writeByte(8);
+                    flujoSalida.writeObject(aux);
+                    flujoSalida.flush();
+
+                    miSocket.close();
+                } catch (UnknownHostException ex) {
+                    Logger.getLogger(VentanaSecunciariaCliente.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(VentanaSecunciariaCliente.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButtonBuscarLibroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarLibroActionPerformed
+        if(!jTextFieldBuscarLibro.getText().isEmpty()){
+            try {
+                InetAddress address = InetAddress.getLocalHost();
+                Socket miSocket = new Socket(address, VentanaPrincipalCliente.puerto);
+                ObjectOutputStream flujoSalida = new ObjectOutputStream(miSocket.getOutputStream());
+                String coincidencia = jTextFieldBuscarLibro.getText();
+                
+                flujoSalida.writeByte(9);
+                flujoSalida.writeObject(coincidencia);
+                flujoSalida.flush();
+                
+                ObjectInputStream flujoEntrada = new ObjectInputStream(miSocket.getInputStream());
+                String entrada = (String) flujoEntrada.readObject();
+                
+                jTextArea1.setText("");
+                jTextArea1.setText(entrada);
+
+                
+                miSocket.close();
+                
+                
+            } catch (UnknownHostException ex) {
+                Logger.getLogger(VentanaSecunciariaCliente.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(VentanaSecunciariaCliente.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(VentanaSecunciariaCliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jButtonBuscarLibroActionPerformed
 
     /**
      * @param args the command line arguments
@@ -347,7 +443,9 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButtonBuscarLibro;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
@@ -357,6 +455,8 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextField jTextFieldBuscarLibro;
+    private javax.swing.JTextField jTextISBN;
     // End of variables declaration//GEN-END:variables
 
     void doDot(String pInput, String pOutput) {
@@ -402,7 +502,5 @@ public class VentanaSecunciariaCliente extends javax.swing.JDialog {
         }
 
     }
-
-  
 
 }

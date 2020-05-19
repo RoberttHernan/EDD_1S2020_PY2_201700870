@@ -42,7 +42,7 @@ public class BTreeNode {
             i++;
         }
 
-        if (keys[i].getIsbn() == k.getIsbn()) {
+        if (i<n &&keys[i].getIsbn() == k.getIsbn()) {
             return this;
         }
 
@@ -204,7 +204,6 @@ public class BTreeNode {
     }
 
     static String aux;
-
     private String retorna() {
 
         int i;
@@ -230,7 +229,7 @@ public class BTreeNode {
         while (i < n && (isbn > keys[i].getIsbn())) {
             i++;
         }
-        if (keys[i].getIsbn() == isbn) {
+        if (i <n && keys[i].getIsbn() == isbn) {
             return true;
         }
 
@@ -240,7 +239,63 @@ public class BTreeNode {
 
         return C[i].searchISBN(isbn);
     }
+    
+    
+    /**
+     * Funcion que busca un libro en el nodo y lo retorna si lo encuentra
+     * @param isbn
+     * @return 
+     */
+    public Libro searchLibro(int isbn) {
+        
+    int i = 0;
+        while (i < n && keys[i].getIsbn()<isbn) {
+            i++;
+        }
+        if (i<n && keys[i].getIsbn() == isbn) {
+            return keys[i];
+        }
 
+        if (leaf == true) {
+            return null;
+        }
+
+        return C[i].searchLibro(isbn);
+        
+    }
+
+
+    /**
+     * Funcion que busca una coicidencia en un string respecto a los titulos
+ registrados de los libros
+     * @param coincidencia
+     * @return
+     */
+ 
+    static String aaaa;
+   private  String buscarCoincidencias_(String coincidencia){
+        int i;
+        for (i = 0; i < n; i++) {
+            if (leaf == false) {
+                C[i].buscarCoincidencias_(coincidencia);
+            }
+            if(keys[i].getTitulo().toLowerCase().contains(coincidencia.toLowerCase())){
+              aaaa+= keys[i].toString()+"\n";
+            }
+        }
+        if (leaf == false) {
+            C[i].buscarCoincidencias_(coincidencia);
+        }
+        
+        return aaaa;
+    
+    }
+    
+   public String Coincidencia (String texto){
+       aaaa ="";
+   return buscarCoincidencias_(texto);
+   }
+    
     public int FindKey(int isbn) {
         int idx = 0;
         while (idx < n && keys[idx].getIsbn() < isbn) {

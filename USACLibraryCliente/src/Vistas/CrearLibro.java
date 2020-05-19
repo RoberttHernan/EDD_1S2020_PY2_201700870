@@ -205,7 +205,7 @@ public class CrearLibro extends javax.swing.JDialog {
                 flujoSalida.writeByte(7);
                 flujoSalida.writeObject(libro);
                 
-                ObjectInputStream flujoEntrada = new ObjectInputStream(miSocket.getInputStream());
+                DataInputStream flujoEntrada = new DataInputStream(miSocket.getInputStream());
                 String mensaje = flujoEntrada.readUTF();
                 JOptionPane.showMessageDialog(rootPane, mensaje);
                 

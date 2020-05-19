@@ -33,9 +33,18 @@ public class BTree {
 
     public boolean searchISBN(int isbn) {
         if (root == null) {
-            return true;
+            return false;
         } else {
             return root.searchISBN(isbn);
+        }
+    }
+
+    
+    public Libro searchLibro(int isbn) {
+         if (root == null) {
+            return null;
+        } else {
+            return root.searchLibro(isbn);
         }
     }
 
@@ -166,6 +175,7 @@ public class BTree {
         return root.retornaTexto();
 
     }
+    
 
     public void remove(int isbn) {
         if (root == null) {
@@ -184,5 +194,9 @@ public class BTree {
                 root = root.getC()[0];
             }
         }
+    }
+    
+    public String retornaCoincidencia (String texto){
+    return root.Coincidencia(texto);
     }
 }

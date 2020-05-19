@@ -16,9 +16,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.awt.Desktop;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -41,29 +43,29 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author robea
  */
 public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
-
-    TablaHash tabla = new TablaHash(45);
-    ArbolAvl arbolAvl;
-
+    
+    public static TablaHash tabla = new TablaHash(45);
+   public static  ArbolAvl arbolAvl;
+    
     Ventana_ConfiguracionPuerto Ventanaconfiguracion = new Ventana_ConfiguracionPuerto(this, true);
-
+    
     static int opcion = 0;
     private int puerto = 5050;
     Thread miHilo = new Thread(this);
-
+    
     public VentanaPrincipal() {
-
+        
         initComponents();
         this.setLocationRelativeTo(null);
         arbolAvl = new ArbolAvl();
         miHilo.start();
-
+        
     }
-
+    
     public TablaHash getTabla() {
         return tabla;
     }
-
+    
     public void setTabla(TablaHash tabla) {
         this.tabla = tabla;
     }
@@ -85,9 +87,14 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         ReporteUsuariosBoton = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
 
         jMenu3.setText("jMenu3");
 
@@ -117,6 +124,14 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
         });
         jMenu2.add(jMenuItem2);
 
+        jMenuItem3.setText("Configuracion Categorias");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem3);
+
         jMenuBar1.add(jMenu2);
 
         jMenu4.setText("Reportes");
@@ -136,6 +151,38 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
             }
         });
         jMenu4.add(jMenuItem4);
+
+        jMenuItem5.setText("Reporte Arbol B");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem5);
+
+        jMenuItem6.setText("Avl Preorden");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem6);
+
+        jMenuItem7.setText("Avl Inorden");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem7);
+
+        jMenuItem8.setText("Avl Postorden");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem8);
 
         jMenuBar1.add(jMenu4);
 
@@ -171,19 +218,19 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Json", "json");
         fileChooser.setFileFilter(filter);
-
+        
         int seleccion = fileChooser.showDialog(jLabel1, null);
         JsonParser parser = new JsonParser();
         try {
             FileReader fr = new FileReader(fileChooser.getSelectedFile());
-
+            
             JsonObject gsonObj = parser.parse(fr).getAsJsonObject();
-
+            
             JsonArray usuarios = gsonObj.get("Usuarios").getAsJsonArray();
-
+            
             for (JsonElement user : usuarios) {
                 JsonObject g = user.getAsJsonObject();
-
+                
                 int carnet = g.get("Carnet").getAsInt();
                 String nombre = g.get("Nombre").getAsString();
                 String apellido = g.get("Apellido").getAsString();
@@ -191,13 +238,13 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
                 String pass = g.get("Password").getAsString();
                 Estudiante estudiante = new Estudiante(carnet, nombre, apellido, carrera, pass);
                 tabla.insert(estudiante);
-
+                
             }
-
+            
         } catch (FileNotFoundException ex) {
             Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
 
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
@@ -208,7 +255,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
                 puerto = Ventanaconfiguracion.getPuerto();
                 jLabelMostrarPuerto.setText("Puerto: " + puerto);
             }
-
+            
         });
         Ventanaconfiguracion.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
@@ -222,11 +269,54 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void ReporteUsuariosBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ReporteUsuariosBotonActionPerformed
-
-        tabla.graficar("graficas//Tabla_Grafico.jpg");
-        doDot("graficas//Tabla_Grafico.dot", "graficas//Tabla_Grafico.jpg");
+        
+        try {
+            tabla.graficar("graficas//Tabla_Grafico.jpg");
+            doDot("graficas//Tabla_Grafico.dot", "graficas//Tabla_Grafico.jpg");
+            Thread.sleep(500);
+            abrirarchivo("graficas//Tabla_Grafico.jpg");
+        } catch (InterruptedException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
 
     }//GEN-LAST:event_ReporteUsuariosBotonActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        ConfiguracionCategorias configuracionCategorias = new ConfiguracionCategorias(this, rootPaneCheckingEnabled);
+        configuracionCategorias.setVisible(true);
+        configuracionCategorias.setLocationRelativeTo(null);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        ReportesArbolB reporteArbolB = new ReportesArbolB(this, rootPaneCheckingEnabled);
+        reporteArbolB.setVisible(true);
+        reporteArbolB.setLocationRelativeTo(null);
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        try {
+            arbolAvl.graficarInorden("graficas//graficoPreorden.dot", "graficas//graficoPreorden.jpg");
+        } catch (IOException ex) {
+
+        }
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        try {      
+            arbolAvl.graficarPreorden("graficas//graficoInorden.dot", "graficas//graficoInorden.jpg");
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        try {
+            arbolAvl.graficarPosOrden( "graficas//graficoPosorden.dot",  "graficas//graficoPosorden.jpg");
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -259,7 +349,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new VentanaPrincipal().setVisible(true);
-
+                
             }
         });
     }
@@ -275,7 +365,12 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
     // End of variables declaration//GEN-END:variables
 
     public static String getMd5(String input) {
@@ -302,7 +397,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
             throw new RuntimeException(e);
         }
     }
-
+    
     @Override
     public void run() {
         try {
@@ -312,11 +407,11 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
             String respuesta;
             int i = 0;
             PaqueteUsuario user;
-
+            
             while (true) {
                 Socket misocket = servidor.accept();
                 ObjectInputStream flujo_entrada = new ObjectInputStream(misocket.getInputStream());
-
+                
                 byte tipo = flujo_entrada.readByte();
                 if (tipo == 1) {
                     user = (PaqueteUsuario) flujo_entrada.readObject();
@@ -328,7 +423,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
                         flujo_salida.writeObject(null);
                         flujo_salida.flush();
                     }
-
+                    
                 }
                 if (tipo == 2) {
                     Estudiante aux = (Estudiante) flujo_entrada.readObject();
@@ -349,9 +444,8 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
                 if (tipo == 4) {
                     Libro libro = (Libro) flujo_entrada.readObject();
                     InsertarLibroEnAvl(libro);
-
                 }
-
+                
                 if (tipo == 5) {
                     Estudiante aux = (Estudiante) flujo_entrada.readObject();
                     DataOutputStream flujoSalida = new DataOutputStream(misocket.getOutputStream());
@@ -360,21 +454,61 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
                     } else {
                         tabla.insert(aux);
                         flujoSalida.writeUTF("Registro correcto");
-
+                        
                     }
                 }
                 if (tipo == 6) {
                     String f = arbolAvl.retornaLibros();
                     ObjectOutputStream flujoSalida = new ObjectOutputStream(misocket.getOutputStream());
                     flujoSalida.writeObject(f);
-
+                    
                 }
                 if (tipo == 7) {
                     Libro libro = (Libro) flujo_entrada.readObject();
                     DataOutputStream flujoSalida = new DataOutputStream(misocket.getOutputStream());
                     
+                    if (arbolAvl.buscarIsbn(libro.getIsbn()) == false) {
+                        InsertarLibroEnAvl(libro);
+                        flujoSalida.writeUTF("Libro registrado Correctamente");
+                        
+                    } else {
+                        flujoSalida.writeUTF("Error, libro ya en el sistema");
+                    }
+                    
                 }
-
+                if (tipo == 8) {
+                    Libro libro = (Libro) flujo_entrada.readObject();
+                    DataOutputStream flujoSalida = new DataOutputStream(misocket.getOutputStream());
+                    Libro aux = arbolAvl.obtenerLibro(libro.getIsbn());
+                    
+                    if (aux != null) {
+                        if (aux.getCarnet() == libro.getCarnet()) {
+                            NodoAvl nodoaux = arbolAvl.buscarNodo(libro.getIsbn());
+                            nodoaux.getValor().remove(libro.getIsbn());
+                            flujoSalida.writeUTF("Libro Borrado Correctamente");
+                        } else {
+                            flujoSalida.writeUTF("No tiene permisos para borrar este libro ");
+                        }
+                        
+                    } else {
+                        flujoSalida.writeUTF("Error, libro no existente");
+                    }
+                    
+                }
+                
+                if (tipo == 9) {
+                    String coincidencia = (String) flujo_entrada.readObject();
+                    String salida = arbolAvl.retornarCoincidencia(coincidencia);
+                    ObjectOutputStream flujoSalia = new ObjectOutputStream(misocket.getOutputStream());
+                    
+                    if (salida != null) {
+                        flujoSalia.writeObject(salida);
+                    } else {
+                        flujoSalia.writeUTF("Sin coincidencias");
+                    }
+                    
+                }
+                
                 misocket.close();
             }
         } catch (IOException | ClassNotFoundException ex) {
@@ -382,70 +516,86 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Runnable {
             JOptionPane.showMessageDialog(rootPane, "Error " + ex);
         }
     }
-
+    
     public int getPuerto() {
         return puerto;
     }
-
+    
     public void setPuerto(int puerto) {
         this.puerto = puerto;
     }
-
+    
     public JLabel getjLabelMostrarPuerto() {
         return jLabelMostrarPuerto;
     }
-
+    
     public void setjLabelMostrarPuerto(JLabel jLabelMostrarPuerto) {
         this.jLabelMostrarPuerto = jLabelMostrarPuerto;
     }
-
+    
     private void InsertarLibroEnAvl(Libro libro) {
-
-        arbolAvl.Add(libro.getCategoria());
-        NodoAvl aux = arbolAvl.search(libro.getCategoria());
-        aux.getValor().insert(libro);
-
+        
+        if (arbolAvl.buscarIsbn(libro.getIsbn()) == false) {
+            arbolAvl.Add(libro.getCategoria());
+            NodoAvl aux = arbolAvl.search(libro.getCategoria());
+            aux.getValor().insert(libro);
+        }
+        
     }
+    static void abrirarchivo(String archivo){
 
+     try {
+
+            File objetofile = new File (archivo);
+            Desktop.getDesktop().open(objetofile);
+
+     }catch (IOException ex) {
+
+            System.out.println(ex);
+
+     }
+
+}
+    
     static void doDot(String pInput, String pOutput) {
         try {
-
+            
             String dotPath
                     = "C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe";
-
+            
             String fileInputPath = pInput;
             String fileOutputPath = pOutput;
-
+            
             String tParam = "-Tjpg";
             String tOParam = "-o";
-
+            
             String[] cmd = new String[5];
             cmd[0] = dotPath;
             cmd[1] = tParam;
             cmd[2] = fileInputPath;
             cmd[3] = tOParam;
             cmd[4] = fileOutputPath;
-
+            
             Runtime rt = Runtime.getRuntime();
-
+            
             rt.exec(cmd);
-
+            
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
         }
         try {
-
+            
             String[] cmd = new String[4];
             cmd[0] = "cmd";
             cmd[1] = "/C";
             cmd[2] = "start";
             cmd[3] = pOutput;
-
+            
             Runtime rt = Runtime.getRuntime();
-
+            
             rt.exec(cmd);
-
+            
         } catch (Exception e) {
         }
     }

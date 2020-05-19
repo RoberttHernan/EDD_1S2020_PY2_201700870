@@ -1,5 +1,9 @@
 package Estructuras;
 
+import PaquetesEnvio.Libro;
+import java.io.FileWriter;
+import java.io.IOException;
+
 /**
  * Clase que representa un nodo AVL
  *
@@ -9,6 +13,17 @@ public class ArbolAvl {
 
     private NodoAvl raiz;
     boolean opcion = false;
+    static int contador_claves;
+
+    static String textoInorden;
+    static String nodosPreordenGraphviz;
+    static String textoPosOrden;
+    int contador_temp = 0;
+    
+
+    public ArbolAvl() {
+        this.contador_claves = 0;
+    }
 
     int altura(NodoAvl N) {
         if (N == null) {
@@ -106,6 +121,7 @@ public class ArbolAvl {
             nodo.setDerecha(RightRotate(nodo.getDerecha()));
             return LeftRotate(nodo);
         }
+        contador_claves++;
         return nodo;
 
     }
@@ -167,6 +183,7 @@ public class ArbolAvl {
             raiz.setDerecha(RightRotate(raiz.getDerecha()));
             return LeftRotate(raiz);
         }
+        contador_claves--;
         return raiz;
     }
 
@@ -217,7 +234,7 @@ public class ArbolAvl {
         raiz = insert(raiz, categoria);
     }
 
-    String aux;
+    static String aux;
 
     private String textouno(NodoAvl nodo) {
         if (nodo != null) {
@@ -236,7 +253,8 @@ public class ArbolAvl {
 
     }
 
-    boolean bandera = false;
+    static boolean bandera = false;
+
     private boolean buscarIS(NodoAvl nodo, int isbn) {
 
         if (nodo != null) {
@@ -244,16 +262,224 @@ public class ArbolAvl {
                 bandera = true;
             }
             buscarIS(nodo.getIzquierda(), isbn);
-            buscarIS(nodo.getDerecha(),isbn);
+            buscarIS(nodo.getDerecha(), isbn);
 
         }
         return bandera;
     }
-    
-    public boolean buscarIsbn (int isbn){
-    return buscarIS(raiz, isbn);
+
+    public boolean buscarIsbn(int isbn) {
+        bandera = false;
+        return buscarIS(raiz, isbn);
+    }
+
+    static Libro libro = null;
+
+    private Libro obtenerLibroprivate(NodoAvl nodo, int isbn) {
+        if (nodo != null) {
+            if (nodo.obtenerLibro(isbn) != null) {
+                libro = nodo.obtenerLibro(isbn);
+            }
+            obtenerLibroprivate(nodo.getIzquierda(), isbn);
+            obtenerLibroprivate(nodo.getDerecha(), isbn);
+
+        }
+        return libro;
+    }
+
+    public Libro obtenerLibro(int isbn) {
+        return obtenerLibroprivate(raiz, isbn);
+    }
+
+    static NodoAvl nodoaux = null;
+
+    private NodoAvl buscarNodo_(NodoAvl nodo, int isbn) {
+
+        if (nodo != null) {
+            if (nodo.searchIsbn(isbn)) {
+                nodoaux = nodo;
+            }
+            buscarNodo_(nodo.getIzquierda(), isbn);
+            buscarNodo_(nodo.getDerecha(), isbn);
+
+        }
+        return nodoaux;
+    }
+
+    public NodoAvl buscarNodo(int isbn) {
+        nodoaux = null;
+        return buscarNodo_(raiz, isbn);
+    }
+
+    static String texto;
+
+    private String Coincidencia(NodoAvl nodo, String coincidencia) {
+        if (nodo != null) {
+            texto += nodo.obtenerCoincidencia(coincidencia);
+            Coincidencia(nodo.getIzquierda(), coincidencia);
+            Coincidencia(nodo.getDerecha(), coincidencia);
+        }
+        return texto;
+    }
+
+    public String retornarCoincidencia(String coincidencia) {
+        texto = "";
+        return Coincidencia(raiz, coincidencia);
+    }
+
+    private String PreordenGraphviz(NodoAvl nodo) {
+
+        if (nodo != null) {
+            if (nodo == raiz) {
+                nodosPreordenGraphviz += "\"" + nodo.getCategoria() + "\"";
+            } else {
+                nodosPreordenGraphviz += "->\"" + nodo.getCategoria() + "\"";
+            }
+            PreordenGraphviz(nodo.getIzquierda());
+            PreordenGraphviz(nodo.getDerecha());
+        }
+        return nodosPreordenGraphviz;
+
+    }
+
+    public String TextoPreOrdenGraphviz() {
+        nodosPreordenGraphviz = "";
+        return "digraph g {\n rankdir=LR; \n node [shape = record]\n"
+                + PreordenGraphviz(raiz) + "\n}";
+    }
+
+    public void graficarPreorden(String pInput, String pOutput) throws IOException {
+        FileWriter f = new FileWriter("graficas//graficoPreorden.dot");
+
+        f.write(TextoPreOrdenGraphviz());
+        f.close();
+        doDot(pInput, pOutput);
+    }
+//------------------------------------------------------------------------------
+    private String inOrdenGraphviz(NodoAvl nodo) {
+        int n = contarClaves();
+        if (nodo != null) {
+
+            inOrdenGraphviz(nodo.getIzquierda());
+
+            if (contador_temp == n - 1) {
+                textoInorden += "\"" + nodo.getCategoria() + "\"";
+            } else {
+                textoInorden += "\"" + nodo.getCategoria() + "\"->";
+                contador_temp++;
+            }
+            inOrdenGraphviz(nodo.getDerecha());
+        }
+        contador_temp = 0;
+        contador_claves =0;
+        return textoInorden;
+
+    }
+
+    public String TextoInOrdenGraphviz() {
+        textoInorden = "";
+        return "digraph g {\n rankdir=LR; \n node [shape = record]\n"
+                + inOrdenGraphviz(raiz) + "\n}";
+    }
+
+    public void graficarInorden(String pInput, String pOutput) throws IOException {
+        FileWriter f = new FileWriter("graficas//graficoInorden.dot");
+
+        f.write(TextoInOrdenGraphviz());
+        f.close();
+        doDot(pInput, pOutput);
+    }
+//------------------------------------------------------------------------------
+   
+    static void doDot(String pInput, String pOutput) {
+        try {
+
+            String dotPath
+                    = "C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot.exe";
+
+            String fileInputPath = pInput;
+            String fileOutputPath = pOutput;
+
+            String tParam = "-Tjpg";
+            String tOParam = "-o";
+
+            String[] cmd = new String[5];
+            cmd[0] = dotPath;
+            cmd[1] = tParam;
+            cmd[2] = fileInputPath;
+            cmd[3] = tOParam;
+            cmd[4] = fileOutputPath;
+
+            Runtime rt = Runtime.getRuntime();
+
+            rt.exec(cmd);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+        }
+        try {
+
+            String[] cmd = new String[4];
+            cmd[0] = "cmd";
+            cmd[1] = "/C";
+            cmd[2] = "start";
+            cmd[3] = pOutput;
+
+            Runtime rt = Runtime.getRuntime();
+
+            rt.exec(cmd);
+
+        } catch (Exception e) {
+        }
+    }
+
+    private int contadorClaves(NodoAvl nodo) {
+        if (nodo != null) {
+            contador_claves++;
+            contadorClaves(nodo.getIzquierda());
+            contadorClaves(nodo.getDerecha());
+        }
+        return contador_claves;
+
+    }
+
+    public int contarClaves() {
+        contador_claves = 0;
+        return contadorClaves(raiz);
+    }
+
+    private String posOrden(NodoAvl nodo) {
+        int n = contarClaves();
+        if (nodo!=null){
+        
+            posOrden(nodo.getIzquierda());
+            posOrden(nodo.getDerecha());
+            
+            if (contador_temp== n-1){
+            textoPosOrden += "\""+nodo.getCategoria() +"\"";
+            }
+            else {
+            textoPosOrden += "\""+nodo.getCategoria() +"\"->";
+            contador_temp++;
+            }
+        }
+        return textoPosOrden;
+
     }
     
-   
+    public String TextoPosOrden (){
+    textoPosOrden ="";
+     return "digraph g {\n rankdir=LR; \n node [shape = record]\n"
+                + posOrden(raiz) + "\n}";
+    }
+    
+    public void graficarPosOrden(String pInput, String pOutput) throws IOException {
+        FileWriter f = new FileWriter("graficas//graficoPosorden.dot");
 
+        f.write(TextoPosOrden());
+        f.close();
+        doDot(pInput, pOutput);
+    }
+   
 }

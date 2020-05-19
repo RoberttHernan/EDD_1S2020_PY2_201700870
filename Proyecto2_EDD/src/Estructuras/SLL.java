@@ -108,7 +108,8 @@ public class SLL {
         String texto = "";
 
         while (aux != null) {
-            texto += "node" + aux.hashCode() + "[ label = \"" + aux.getEstudiante().getNombre() + "|" + aux.getEstudiante().getCarnet() + "\"];\n";
+            texto += "node" + aux.hashCode() + "[ label = \"" + aux.getEstudiante().getNombre() + "|" + aux.getEstudiante().getCarnet() +
+                    "|"+aux.getEstudiante().getPassword()+"\"];\n";
             aux = aux.getSig();
         }
         return texto;

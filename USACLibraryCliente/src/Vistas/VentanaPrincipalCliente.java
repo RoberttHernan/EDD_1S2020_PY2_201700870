@@ -15,8 +15,11 @@ import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.net.Socket;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -40,6 +43,10 @@ public class VentanaPrincipalCliente extends javax.swing.JFrame {
     public VentanaPrincipalCliente() {
         initComponents();
         this.setLocationRelativeTo(null);
+        
+        
+         
+        
 
     }
 
@@ -123,7 +130,7 @@ public class VentanaPrincipalCliente extends javax.swing.JFrame {
 
         try {
 
-            InetAddress address = InetAddress.getLocalHost();
+           InetAddress address = InetAddress.getLocalHost();
             try (Socket miSocket = new Socket(address, puerto)) {
                 String valorPass = new String(jPasswordIngresoCliente.getPassword());
                 PaqueteUsuario user = new PaqueteUsuario(Integer.parseInt(jTextCarnetIngreso.getText()), getMd5(valorPass));

@@ -1,5 +1,6 @@
 package Estructuras;
 
+import PaquetesEnvio.Libro;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
@@ -101,7 +102,7 @@ public class NodoAvl {
             escritor = new PrintWriter(fichero);
             escritor.print(getCodigoGraphviz());
         } catch (Exception e) {
-            System.err.println("Error al escribir el archivo aux_grafico.dot");
+            System.err.println("Error al escribir el archivo AVL_grafico.dot");
         } finally {
             try {
                 if (null != fichero) {
@@ -134,5 +135,17 @@ public class NodoAvl {
     public boolean searchIsbn (int isbn){
      return valor.searchISBN(isbn);
     }
+    
+    public Libro obtenerLibro (int isbn){
+    return valor.searchLibro(isbn);
+    }
+    
+    public String obtenerCoincidencia (String texto ){
+    return valor.retornaCoincidencia(texto);
+    }
+    
+    
+    
+    
 
 }
